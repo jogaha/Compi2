@@ -217,6 +217,7 @@ namespace Compi
 		bool Seguir;
 		bool HuboErrores;
 		List<Token> ListaToken;
+		List<int> ListaReglas;
 		List<int> MisReglas;
 		int Cola;
 		int Columna, Renglon;
@@ -230,6 +231,7 @@ namespace Compi
 			Seguir = true;
 			this.ListaToken = ListaToken;
 			MisReglas = new List<int>();
+			ListaReglas = new List<int>();
             var result =new string[2] ;
 
             if (ListaToken.Count > 0)
@@ -244,19 +246,35 @@ namespace Compi
             result[0] = retorno;
             result[1] = "OK";
 
+			
+
             do
 			{
-				switch (MisRegla{[MisReglas.Count -1])
+				switch (MisReglas[MisReglas.Count - 1])
 				{
-					case 1007:  // regla de la clase 
-						swSemantico = TipoSemantico.ClaseIN;
+					case 1008:  // regla de la clase
+
+						for (int i = 0; MR[8, i] != -999; i++)
+						{
+							int variable = MR[8, i];
+							if (variable != -26)
+							{
+								if (variable != 1013)
+								{
+									if (variable != -25)
+									{
+										ListaReglas.Add(MR[8, i]);
+									}
+								}
+							}	
+						}
 						break;
 
-					default:
+				default:
 						break;
-				}
+			}
 
-				if (ListaToken[Cola].estado != MisReglas[MisReglas.Count - 1])
+			if (ListaToken[Cola].estado != MisReglas[MisReglas.Count - 1])
 				{
 					if (MisReglas.Last() < 1000)
 					{

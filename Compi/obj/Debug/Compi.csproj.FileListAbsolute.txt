@@ -114,3 +114,12 @@ C:\Users\jogah\Desktop\Compiladore completo version final\Compi\Compi\obj\Debug\
 C:\Users\jogah\Desktop\Compiladore completo version final\Compi\Compi\obj\Debug\Compi.csproj.GenerateResource.cache
 C:\Users\jogah\Desktop\Compiladore completo version final\Compi\Compi\obj\Debug\Compi.exe
 C:\Users\jogah\Desktop\Compiladore completo version final\Compi\Compi\obj\Debug\Compi.pdb
+C:\Users\jogah\Desktop\Compi\Compi\bin\Debug\Compi.exe.config
+C:\Users\jogah\Desktop\Compi\Compi\bin\Debug\Compi.exe
+C:\Users\jogah\Desktop\Compi\Compi\bin\Debug\Compi.pdb
+C:\Users\jogah\Desktop\Compi\Compi\obj\Debug\Compi.csprojAssemblyReference.cache
+C:\Users\jogah\Desktop\Compi\Compi\obj\Debug\Compi.Form1.resources
+C:\Users\jogah\Desktop\Compi\Compi\obj\Debug\Compi.Properties.Resources.resources
+C:\Users\jogah\Desktop\Compi\Compi\obj\Debug\Compi.csproj.GenerateResource.cache
+C:\Users\jogah\Desktop\Compi\Compi\obj\Debug\Compi.exe
+C:\Users\jogah\Desktop\Compi\Compi\obj\Debug\Compi.pdb
