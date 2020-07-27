@@ -224,7 +224,6 @@ namespace Compi
 		int Regla;
 		string retorno;
 		public List<Error> ErroresSintacticos = new List<Error>();
-		public List<PreTablaSim> PreTablaSim = new List<PreTablaSim>();
 		int reglaActual;
 		int filaActual;
 		public string[] Ejecutar(List<Token> ListaToken)
@@ -234,7 +233,7 @@ namespace Compi
 			Seguir = true;
 			this.ListaToken = ListaToken;
 			MisReglas = new List<int>();
-			ListaReglas = new List<int>();
+			//ListaReglas = new List<int>();
 			var result = new string[2];
 
 			if (ListaToken.Count > 0)
@@ -251,20 +250,6 @@ namespace Compi
 
 			do
 			{
-				switch (MisReglas[MisReglas.Count - 1])
-				{
-					case 1008:  // regla de la clase
-						reglaActual = 1008;
-						for (int i = 0; MR[8, i] != -999; i++)
-						{
-							int variable = MR[8, i];
-							ListaReglas.Add(MR[8, i]);
-						}
-						//filaActual =ListaReglas.le;
-						break;
-					default:
-						break;
-				}
 
 				if (ListaToken[Cola].estado != MisReglas[MisReglas.Count - 1])
 				{
@@ -311,25 +296,7 @@ namespace Compi
 						else
 						{
 							InsertarRegla(Regla);
-                            switch (reglaBnf)
-                            {
-								case 1011:
-									if (reglaActual == 1008)
-									{
-                                        for (int i = 0; i < ListaReglas.Count; i++)
-                                        {
-                                            if (ListaReglas[i] == reglaBnf)
-                                            {
-												ListaReglas.Remove(ListaReglas[i]);
-												InsertarReglaSimbolo(Regla);
-											}
-										}
-									}
-									break;
-                                default:
-                                    break;
-                            }
-
+                            
                         }
 					}
 					else
@@ -366,9 +333,6 @@ namespace Compi
 
 			} while (Seguir == true);
 
-
-
-
 			if (!HuboErrores)
 			{
 				result[0] = "Analisis Sintactico Finalizado sin errores";
@@ -378,6 +342,9 @@ namespace Compi
 
 			return result;
 		}
+		public void insertarTS(List<Token> ListaToken) 
+		{ 
+		}
 
 		void InsertarRegla(int FilaRegla)
 		{
@@ -385,13 +352,6 @@ namespace Compi
 			for (int i = 0; MR[FilaRegla, i] != -999; i++)
 			{
 				MisReglas.Add(MR[FilaRegla, i]);
-			}
-		}
-		void InsertarReglaSimbolo(int FilaRegla) 
-		{
-			for (int i = 0; MR[FilaRegla, i] != -999; i++)
-			{
-				ListaReglas.Add(MR[FilaRegla, i]);
 			}
 		}
 
@@ -797,14 +757,4 @@ namespace Compi
 		}	
 	}
 
-	public class PreTablaSim
-	{
-		public string [] Simbolos;
-		public int linea;
-		public PreTablaSim(string[] simbolos, int linea)
-		{
-			this.Simbolos = simbolos;
-			this.linea = linea;
-		}
-	}
 }

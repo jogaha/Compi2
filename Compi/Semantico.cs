@@ -6,16 +6,18 @@ using System.Threading.Tasks;
 
 namespace Compi
 {
-	public enum Alcance {
-		Public,
-		Private,
-		Protected
+	public class TablaSimbolos
+	{
+		Dictionary<object, NodoClase> tablaSimbolosClase = new Dictionary<object, NodoClase>();
+
+		public int sobrecargas = 0;
+		public int numeroEtiqueta = 1;
 	}
 
 	public class NodoClase
 	{
 		private string lexema;
-		private string herencia;
+		private NodoClase herencia;
 		private int renglonDeclaracion;
 		private int[] referencias;
 
@@ -32,7 +34,7 @@ namespace Compi
 			}
 		}
 
-		public string Herencia
+		public NodoClase Herencia
 		{
 			get
 			{
@@ -71,8 +73,73 @@ namespace Compi
 				referencias = value;
 			}
 		}
+
+		private Dictionary<object, NodoAtributo> TSA = new Dictionary<object, NodoAtributo>();
 	}
-	class Semantico
+	public class NodoAtributo
 	{
+		public string lexema;
+		public Alcance miAlcance;
+		public TipoDato miTipo;
+		public string valor;
+		public string memoria;
 	}
+	public class NodoMetodo
+	{
+		public string lexema;
+		public Alcance miAlcance;
+		public Regreso miRegreso;
+		public Dictionary<object, NodoVariables> TablaSimbolosVariables =
+			new Dictionary<object, NodoVariables>();
+	}
+	public class NodoVariables
+	{
+		public Alcance miAlcance;
+		public string lexema;
+		public TipoDato miTipo;
+		public string valor;
+		public TipoVariable tipoVariable;
+	}
+
+	#region Alcance, Tipo de Datos, Tipo Variables, Estados
+
+	public enum Alcance
+	{
+		Public,
+		Private,
+		Protected
+	}
+	public enum TipoDato
+	{
+		Int,
+		Float,
+		String,
+		Char,
+		Boolean,
+		NADA
+	}
+	public enum Estado
+	{
+		Insertado,
+		Duplicado,
+		DuplicadoVariableMetodo,
+		DuplicadoAtributoConClase,
+		DuplicadoMetodoConClase
+	}
+	public enum Regreso
+	{
+		Void,
+		Int,
+		String,
+		Char,
+		Boolean
+	}
+	public enum TipoVariable
+	{
+		Reference,
+		Primitive
+	}
+
+	#endregion
+
 }
