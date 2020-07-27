@@ -21,6 +21,7 @@ namespace Compi
 		private int renglonDeclaracion;
 		private int[] referencias;
 
+		#region Encapsulamiento NodoClase
 		public string Lexema
 		{
 			get
@@ -74,31 +75,211 @@ namespace Compi
 			}
 		}
 
+		#endregion
+
 		private Dictionary<object, NodoAtributo> TSA = new Dictionary<object, NodoAtributo>();
 	}
 	public class NodoAtributo
 	{
-		public string lexema;
-		public Alcance miAlcance;
-		public TipoDato miTipo;
-		public string valor;
-		public string memoria;
+		private string lexema;
+		private Alcance miAlcance;
+		private TipoDato miTipo;
+		private string valor;
+		private string memoria;
+
+		#region Encapsulamiento NodoAtributo
+		public string Lexema
+		{
+			get
+			{
+				return lexema;
+			}
+
+			set
+			{
+				lexema = value;
+			}
+		}
+		public Alcance MiAlcance
+		{
+			get
+			{
+				return miAlcance;
+			}
+
+			set
+			{
+				miAlcance = value;
+			}
+		}
+		public TipoDato MiTipo
+		{
+			get
+			{
+				return miTipo;
+			}
+
+			set
+			{
+				miTipo = value;
+			}
+		}
+		public string Valor
+		{
+			get
+			{
+				return valor;
+			}
+
+			set
+			{
+				valor = value;
+			}
+		}
+		public string Memoria
+		{
+			get
+			{
+				return memoria;
+			}
+
+			set
+			{
+				memoria = value;
+			}
+		}
+		#endregion
+
+
 	}
 	public class NodoMetodo
 	{
-		public string lexema;
-		public Alcance miAlcance;
-		public Regreso miRegreso;
-		public Dictionary<object, NodoVariables> TablaSimbolosVariables =
-			new Dictionary<object, NodoVariables>();
+		private string lexema;
+		private Alcance miAlcance;
+		private Regreso miRegreso;
+
+		#region Encapsulamiento NodoMetodo
+		public string Lexema
+		{
+			get
+			{
+				return lexema;
+			}
+
+			set
+			{
+				lexema = value;
+			}
+		}
+		public Alcance MiAlcance
+		{
+			get
+			{
+				return miAlcance;
+			}
+
+			set
+			{
+				miAlcance = value;
+			}
+		}
+		public Regreso MiRegreso
+		{
+			get
+			{
+				return miRegreso;
+			}
+
+			set
+			{
+				miRegreso = value;
+			}
+		}
+
+		#endregion
+
+		public Dictionary<object, NodoVariables> TablaSimbolosVariables = new Dictionary<object, NodoVariables>();
 	}
 	public class NodoVariables
 	{
-		public Alcance miAlcance;
-		public string lexema;
-		public TipoDato miTipo;
-		public string valor;
-		public TipoVariable tipoVariable;
+		private Alcance miAlcance;
+		private string lexema;
+		private TipoDato miTipo;
+		private string valor;
+		private TipoVariable tipoVariable;
+
+		#region Encapsulamiento NodoVariables
+		
+		public Alcance MiAlcance
+		{
+			get
+			{
+				return miAlcance;
+			}
+
+			set
+			{
+				miAlcance = value;
+			}
+		}
+		public string Lexema
+		{
+			get
+			{
+				return lexema;
+			}
+
+			set
+			{
+				lexema = value;
+			}
+
+
+		}
+		public TipoDato MiTipo
+		{
+			get
+			{
+				return miTipo;
+			}
+
+			set
+			{
+				miTipo = value;
+			}
+
+
+		}
+		public string Valor
+		{
+			get
+			{
+				return valor;
+			}
+
+			set
+			{
+				valor = value;
+			}
+
+
+		}
+		public TipoVariable TipoVariable
+		{
+			get
+			{
+				return TipoVariable;
+			}
+
+			set
+			{
+				tipoVariable = value;
+			}
+
+
+		}
+		
+		#endregion
 	}
 
 	#region Alcance, Tipo de Datos, Tipo Variables, Estados

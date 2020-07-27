@@ -343,7 +343,8 @@ namespace Compi
 			return result;
 		}
 		public void insertarTS(List<Token> ListaToken) 
-		{ 
+		{
+
 		}
 
 		void InsertarRegla(int FilaRegla)
