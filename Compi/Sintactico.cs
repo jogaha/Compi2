@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Compi.Lexico;
+using static Compi.TablaSimbolos;
 
 namespace Compi
 {
@@ -216,6 +217,9 @@ namespace Compi
 		};
 		bool Seguir;
 		bool HuboErrores;
+		public TablaSimbolos ts = new TablaSimbolos();
+		public string claseActiva;
+		public string metodoActivo;
 		List<Token> ListaToken;
 		public List<int> ListaReglas;
 		List<int> MisReglas;
@@ -335,6 +339,7 @@ namespace Compi
 
 			if (!HuboErrores)
 			{
+				insertarTS(ListaToken);
 				result[0] = "Analisis Sintactico Finalizado sin errores";
 			}
 
@@ -344,8 +349,22 @@ namespace Compi
 		}
 		public void insertarTS(List<Token> ListaToken) 
 		{
+			List<NodoClase> listaClases = new List<NodoClase>();
+			NodoClase nuevaClase = new NodoClase();
 
+			for (int i = 0; i <= ListaToken.Count - 1; i++)
+			{
+				if (ListaToken[i].lexema == "class")
+				{
+					nuevaClase = new NodoClase();							//Crea el nodo para la clase
+					nuevaClase.RenglonDeDeclaracion = ListaToken[i].linea;	//Pasar la linea de declaracion de la clase
+					nuevaClase.Lexema = ListaToken[i + 1].lexema;           //Pasar el lexema de la clase al nodo
+					claseActiva = ListaToken[i + 1].lexema;					//Guardar el lexeman de la clase activa
+				}
+			}
 		}
+
+		#region Metodos Sintatico
 
 		void InsertarRegla(int FilaRegla)
 		{
@@ -742,6 +761,8 @@ namespace Compi
 
 
 		}
+
+		#endregion
 
 	}
 
