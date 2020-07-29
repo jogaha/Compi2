@@ -354,6 +354,7 @@ namespace Compi
 
 			for (int i = 0; i <= ListaToken.Count - 1; i++)
 			{
+				//cuando llega la clase
 				if (ListaToken[i].lexema == "class")
 				{
 					nuevaClase = new NodoClase();							//Crea el nodo para la clase
@@ -361,7 +362,54 @@ namespace Compi
 					nuevaClase.Lexema = ListaToken[i + 1].lexema;           //Pasar el lexema de la clase al nodo
 					claseActiva = ListaToken[i + 1].lexema;					//Guardar el lexeman de la clase activa
 				}
+
+				//Herencia
+				if (ListaToken[i + 2].lexema == ":")
+				{
+					Boolean existeSuperClase = ts.ExisteClaseHeredada(ListaToken[i + 3].lexema);
+					if (existeSuperClase)
+					{
+						nuevaClase.Herencia = encontrarClase(listaClases, ListaToken[i + 3].lexema);
+					}
+					else
+					{
+						//error?
+					}
+
+				}
+				//sumar i hasta despues de definicion de clase
+				int bracket = 0;
+				if (ListaToken[i + 2].lexema == "{")
+				{
+					bracket = i + 2;
+				}
+				else if (ListaToken[i + 4].lexema == "{")
+				{
+					bracket = i + 4;
+				}
+				i = bracket + 1;
+
+				//insertar clase en lista
+
+				Estado estadoClase = ts.InsertarNodoClase(nuevaClase);
+				if (estadoClase == Estado.Insertado)
+				{
+					listaClases.Add(nuevaClase);
+				}
+
 			}
+		}
+
+		public NodoClase encontrarClase(List<NodoClase> listaClases, string lexema)
+		{
+			foreach (var clase in listaClases)
+			{
+				if (clase.Lexema == lexema)
+				{
+					return clase;
+				}
+			}
+			return null;
 		}
 
 		#region Metodos Sintatico

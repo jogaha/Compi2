@@ -12,6 +12,31 @@ namespace Compi
 
 		public int sobrecargas = 0;
 		public int numeroEtiqueta = 1;
+
+		public Estado InsertarNodoClase(NodoClase miNodoClase)
+		{
+			if (!tablaSimbolosClase.ContainsKey(miNodoClase.Lexema))
+			{
+				tablaSimbolosClase.Add(miNodoClase.Lexema, miNodoClase);
+				return Estado.Insertado;
+			}
+			else
+			{
+				return Estado.Duplicado;
+			}
+
+		}
+		public bool ExisteClaseHeredada(string lexema)
+		{
+			if (tablaSimbolosClase.ContainsKey(lexema))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 
 	public class NodoClase
@@ -76,6 +101,7 @@ namespace Compi
 		}
 
 		#endregion
+
 
 		private Dictionary<object, NodoAtributo> TSA = new Dictionary<object, NodoAtributo>();
 	}
