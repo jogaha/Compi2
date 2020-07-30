@@ -13,11 +13,7 @@ namespace Compi
 		public int sobrecargas = 0;
 		public int numeroEtiqueta = 1;
 
-		/// <summary>
-		/// Insertar Nodos Clase en la TS de Clase
-		/// </summary>
-		/// <param name="miNodoClase">Objeto de tipo NodoClase</param>
-		/// <returns>El estado de insertado o duplicado</returns>
+		#region Metodos TS Clase
 		public Estado InsertarNodoClase(NodoClase miNodoClase)
 		{
 			if (!tablaSimbolosClase.ContainsKey(miNodoClase.Lexema))
@@ -40,6 +36,29 @@ namespace Compi
 			else
 			{
 				return false;
+			}
+		}
+		#endregion
+
+		internal Estado InsertarNodoAtributo(NodoAtributo nodo, NodoClase nodoClaseActiva)
+		{
+			if (nodoClaseActiva.Lexema != nodo.Lexema)
+			{
+				if (!nodoClaseActiva.TSA.ContainsKey(nodo.Lexema))
+				{
+					nodoClaseActiva.TSA.Add(nodo.Lexema, nodo);
+					return Estado.Insertado;
+				}
+				else
+				{
+					//Mandar error atributo duplicado
+					return Estado.Duplicado;
+				}
+			}
+			else
+			{
+				return Estado.DuplicadoAtributoConClase;
+				//Mandar error de nombre del atributo igual al nombre de su clase
 			}
 		}
 	}
@@ -108,7 +127,7 @@ namespace Compi
 		#endregion
 
 
-		private Dictionary<object, NodoAtributo> TSA = new Dictionary<object, NodoAtributo>();
+		public Dictionary<object, NodoAtributo> TSA = new Dictionary<object, NodoAtributo>();
 	}
 	public class NodoAtributo
 	{

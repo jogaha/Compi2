@@ -400,19 +400,83 @@ namespace Compi
 					{
 						//Error Semantico clase actual duplicada
 					}
-					//Boolean terminacionClase = false;
-					//while (!terminacionClase)
+					Boolean terminacionClase = false;
+					while (!terminacionClase)
 					{
 						//insertar atributo
-						//if (ListaToken)
-						//{
+						if (ListaToken[i].estado == -4 && ListaToken[i + 1].lexema != "(")
+						{
+							NodoAtributo nuevoAtributo = new NodoAtributo();
+							nuevoAtributo.Lexema = ListaToken[i].lexema;
+							nuevoAtributo.MiTipo = this.conversionLexemaTipo(ListaToken[i - 1].lexema);
+							if (new[] {-132,-133,-134 }.Contains(ListaToken[i - 2].estado))
+							{
+								nuevoAtributo.MiAlcance = conversionoLexemaAlcance(ListaToken[i - 2].lexema);
+							}
+							Estado estadoNodoAtributo = ts.InsertarNodoAtributo(nuevoAtributo, nuevaClase);
+							if (estadoNodoAtributo == Estado.Duplicado)
+							{
+								//Error Semantico el atributo actual esta duplicado
+								
+							}
+							else if (estadoNodoAtributo == Estado.DuplicadoAtributoConClase)
+							{
+								//Error Semantico el atributo actual tiene el mismo nombre de la clase
+							}
+							if (ListaToken[i + 1].lexema == "=")
+							{
+								//if (ListaToken[i])
+								//{
 
-						//}
+								//}
+							}
+						}
 					}
 				}
 
 
 			}
+		}
+
+		private Alcance conversionoLexemaAlcance(string lexema)
+		{
+			switch (lexema)
+			{
+				case "public":
+					return Alcance.Public;
+				case "private":
+					return Alcance.Private;
+				case "protected":
+					return Alcance.Protected;
+				default:
+					return Alcance.Private;
+			}
+		}
+
+		public TipoDato conversionLexemaTipo(string lexema)
+		{
+			
+			switch (lexema)
+			{
+				case "int":
+					 return TipoDato.Int;
+						
+				case "float":
+					 return TipoDato.Float;
+					
+				case "string":
+					 return TipoDato.String;
+					
+				case "char":
+					 return TipoDato.Char;
+					
+				case "boolean":
+					return TipoDato.Boolean;
+				default:
+					return TipoDato.NADA;
+					
+			}
+			
 		}
 
 		public NodoClase encontrarClase(List<NodoClase> listaClases, string lexema)
