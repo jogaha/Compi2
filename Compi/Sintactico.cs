@@ -360,42 +360,57 @@ namespace Compi
 					nuevaClase = new NodoClase();							//Crea el nodo para la clase
 					nuevaClase.RenglonDeDeclaracion = ListaToken[i].linea;	//Pasar la linea de declaracion de la clase
 					nuevaClase.Lexema = ListaToken[i + 1].lexema;           //Pasar el lexema de la clase al nodo
-					claseActiva = ListaToken[i + 1].lexema;					//Guardar el lexeman de la clase activa
-				}
+					claseActiva = ListaToken[i + 1].lexema;                 //Guardar el lexeman de la clase activa
 
-				//Herencia
-				if (ListaToken[i + 2].lexema == ":")
-				{
-					Boolean existeSuperClase = ts.ExisteClaseHeredada(ListaToken[i + 3].lexema);
-					if (existeSuperClase)
+					//Herencia
+					if (ListaToken[i + 2].lexema == ":")
 					{
-						nuevaClase.Herencia = encontrarClase(listaClases, ListaToken[i + 3].lexema);
+						Boolean existeSuperClase = ts.ExisteClaseHeredada(ListaToken[i + 3].lexema);
+						if (existeSuperClase)
+						{
+							nuevaClase.Herencia = encontrarClase(listaClases, ListaToken[i + 3].lexema);
+						}
+						else
+						{
+							//error semantico de Herencia?
+						}
+
 					}
-					else
+
+					//sumar i hasta despues de definicion de clase
+					int bracket = 0;
+					if (ListaToken[i + 2].lexema == "{")
 					{
-						//error?
+						bracket = i + 2;
 					}
+					else if (ListaToken[i + 4].lexema == "{")
+					{
+						bracket = i + 4;
+					}
+					i = bracket + 1;
 
-				}
-				//sumar i hasta despues de definicion de clase
-				int bracket = 0;
-				if (ListaToken[i + 2].lexema == "{")
-				{
-					bracket = i + 2;
-				}
-				else if (ListaToken[i + 4].lexema == "{")
-				{
-					bracket = i + 4;
-				}
-				i = bracket + 1;
+					//insertar clase en lista
 
-				//insertar clase en lista
+					Estado estadoClase = ts.InsertarNodoClase(nuevaClase);
+					if (estadoClase == Estado.Insertado)
+					{
+						listaClases.Add(nuevaClase);
+					}
+					else if (estadoClase == Estado.Duplicado)
+					{
+						//Error Semantico clase actual duplicada
+					}
+					//Boolean terminacionClase = false;
+					//while (!terminacionClase)
+					{
+						//insertar atributo
+						//if (ListaToken)
+						//{
 
-				Estado estadoClase = ts.InsertarNodoClase(nuevaClase);
-				if (estadoClase == Estado.Insertado)
-				{
-					listaClases.Add(nuevaClase);
+						//}
+					}
 				}
+
 
 			}
 		}

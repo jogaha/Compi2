@@ -13,6 +13,11 @@ namespace Compi
 		public int sobrecargas = 0;
 		public int numeroEtiqueta = 1;
 
+		/// <summary>
+		/// Insertar Nodos Clase en la TS de Clase
+		/// </summary>
+		/// <param name="miNodoClase">Objeto de tipo NodoClase</param>
+		/// <returns>El estado de insertado o duplicado</returns>
 		public Estado InsertarNodoClase(NodoClase miNodoClase)
 		{
 			if (!tablaSimbolosClase.ContainsKey(miNodoClase.Lexema))
