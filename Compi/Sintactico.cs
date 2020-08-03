@@ -425,13 +425,48 @@ namespace Compi
 							}
 							if (ListaToken[i + 1].lexema == "=")
 							{
-								//if (ListaToken[i])
-								//{
+								nuevoAtributo.Valor = ListaToken[i + 2].lexema;
+							}
+							int puntoYcoma = i + 3;
+							i = puntoYcoma + 1;
+						}
+						else
+						{
+							int puntoYcoma = i + 1;
+							i = puntoYcoma;
+						}
+						if (ListaToken[i].estado == -80)
+						{
+							break;
+						}
+					}
 
-								//}
+					//Insertar metodo
+					//Entra con palabra reservda para el tipo del metodo
+					if (new[] {-103, -107, -120, -126, -160, -154}.Contains(ListaToken[i].estado) && ListaToken[i + 1].estado == -4 && ListaToken[i + 2].lexema == "(")
+					{
+						string nombreMetodo = "";
+						while (ListaToken[i].lexema != "{")
+						{
+							i++;
+						}
+						Boolean terminacionMetodo = false;
+						while (!terminacionMetodo)
+						{
+							int inicioDefinicionMetodo = 0;
+							if (ListaToken[i].lexema == "{")
+							{
+								inicioDefinicionMetodo = i;
+								int iTemporal = i;
+								while (ListaToken[iTemporal].lexema != "(")
+								{
+									iTemporal--;
+								}
+								NodoMetodo nuevoMetodo = new NodoMetodo();
 							}
 						}
 					}
+
 				}
 
 
@@ -470,7 +505,7 @@ namespace Compi
 				case "char":
 					 return TipoDato.Char;
 					
-				case "boolean":
+				case "bool":
 					return TipoDato.Boolean;
 				default:
 					return TipoDato.NADA;
