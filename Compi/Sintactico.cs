@@ -514,6 +514,7 @@ namespace Compi
 									else if (metodo.Item1 == Estado.DuplicadoMetodoConClase)
 									{
 										//Error semantico metodo "nuevoMetodo.Lexema" duplicado con nombre de clase, tomar linea
+										//return false;
 									}
 									nombreMetodo = metodo.Item2;
 									//Se mueve el index despues de cuerpo de clase: "{" + 1
@@ -521,10 +522,103 @@ namespace Compi
 
 								}
 
-								//insertar
+								//insertar variables de metodo
+								if (ListaToken[i].estado == -4)
+								{
+									NodoVariables nuevaVariable = new NodoVariables();
+									//Se define la variable
+									if (new[] { -103, -107, -120, -126, -160}.Contains(ListaToken[i - 1].estado))
+									{
+										nuevaVariable.MiTipo = conversionLexemaTipo(ListaToken[i - 1].lexema);
+										nuevaVariable.Lexema = ListaToken[i].lexema;
+										if (ListaToken[i + 1].lexema == "=")
+										{
+											int iTemporal = i;
+											while (ListaToken[iTemporal].lexema != ";")
+											{
+												iTemporal++;
+											}
+
+											List<Token> miListaTemporal = ListaToken.GetRange(i, iTemporal - (i - 1));
+
+											Estado estadoMetodo = ts.InsertarNodoVariable(nuevaVariable, nuevaClase, nombreMetodo);
+											if (estadoMetodo == Estado.DuplicadoVariableMetodo)
+											{
+												//Error semantico variable duplicada en metodo "ListaToken[i].lexema" tomar la linea
+												//return false;
+											}
+											else if (estadoMetodo == Estado.Duplicado)
+											{
+												//Error semantico variable diplicada "ListaToken[i].lexema" tomar la linea
+												//return false;
+											}
+										}
+										else if (ListaToken[i + 1].lexema == ";")
+										{
+											List<Token> miListaTemporal = ListaToken.GetRange(i - 1, 3);
+
+										}
+									}
+
+									//uso de variable definida en parametros
+									else if (ListaToken[i + 1 ].lexema != "(")
+									{
+										//Encontrar variable mencionada
+										Boolean existeVariable = ts.ExisteNodoVariable(nuevaClase, nombreMetodo, ListaToken[i].lexema);
+										if (existeVariable)
+										{
+											if (ListaToken[i + 1].lexema == "=")
+											{
+												int iTemporal = i + 2;
+												while (ListaToken[iTemporal].lexema == ";")
+												{
+													if (ListaToken[iTemporal].estado == -4)
+													{
+														Boolean existeVar = ts.ExisteNodoVariable(nuevaClase, nombreMetodo, ListaToken[iTemporal].lexema);
+														if (!existeVar)
+														{
+															//Error Semantico la variable ListaToken[iTemporal].Lexema no ha sido previamente definida. tomar la linea
+															//return false;
+														}
+													}
+													else if (ListaToken[iTemporal].estado == -1 || ListaToken[iTemporal].estado == -2)
+													{
+														nuevaVariable.Valor = ListaToken[i].lexema;
+													}
+													iTemporal++;
+												}
+												i = iTemporal;
+											}
+										}
+										else
+										{
+											//Error Semantico la variable ListaToken[i].Lexema no ha sido previamente definida. tomar la linea
+											//return false;
+										}
+									}
+
+									List<string> listaArgumentos = new List<string>();
+									int iTemporal = i + 2;
+									while (ListaToken[iTemporal].lexema != ")")
+									{
+										if (new[] { -4,-1,-2}.Contains(ListaToken[iTemporal].estado))
+										{
+											listaArgumentos.Add(ListaToken[iTemporal].lexema);
+										}
+									}
+								}
 							}
 						}
 
+						if (ListaToken[i].lexema  == "}")
+						{
+							//insertar nodo clase
+							terminacionClase = true;
+						}
+						else
+						{
+							i++;
+						}
 
 					}
 

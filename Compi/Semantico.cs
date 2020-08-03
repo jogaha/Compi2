@@ -206,6 +206,72 @@ namespace Compi
 			}
 			return null;
 		}
+
+		public List<NodoVariables> ObtenerParametrosMetodo(string lexema, NodoClase nodoClaseActiva, Boolean soloArgumentos)
+		{
+			var non = nodoClaseActiva.TSM.Values;
+			foreach (var metodo in non)
+			{
+				if (metodo.Lexema == lexema)
+				{
+					List<NodoVariables> listaV = new List<NodoVariables>();
+					foreach (var variable in metodo.TSV.Values)
+					{
+						listaV.Add(variable);
+
+					}
+					return listaV;
+				}
+			}
+			return null;
+		}
+		#endregion
+
+		#region Metodos TS Variables
+		public Estado InsertarNodoVariable(NodoVariables nodo, NodoClase nodoClaseActiva, string nombreMetodoActivo)
+		{
+			if (nodoClaseActiva.TSM.ContainsKey(nombreMetodoActivo))
+			{
+				var metodos = nodoClaseActiva.TSM;
+				NodoMetodo nodoMetodo = new NodoMetodo();
+				foreach (var metodo in metodos)
+				{
+					if (metodo.Key.ToString() == nombreMetodoActivo)
+					{
+						nodoMetodo = metodo.Value;
+					}
+				}
+
+				if (!nodoMetodo.TSV.ContainsKey(nodo.Lexema))
+				{
+					nodoMetodo.TSV.Add(nodo.Lexema, nodo);
+					return Estado.Insertado;
+				}
+				else
+				{
+					//se manda el error para el atributo duplicado
+					return Estado.Duplicado;
+				}
+			}
+			else
+			{
+				//error de atributo duplicado con clase
+				return Estado.DuplicadoAtributoConClase;
+			}
+		}
+
+		public Boolean ExisteNodoVariable(NodoClase nodoClaseActiva, string nombreMetodo, string lexema)
+		{
+			List<NodoVariables> listaVariables = ObtenerParametrosMetodo(nombreMetodo, nodoClaseActiva, false);
+			foreach (var variable in listaVariables)
+			{
+				if (variable.Lexema == lexema)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 		#endregion
 	}
 
