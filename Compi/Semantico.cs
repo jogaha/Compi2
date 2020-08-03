@@ -40,6 +40,7 @@ namespace Compi
 		}
 		#endregion
 
+		#region Metodos TS Atributo
 		internal Estado InsertarNodoAtributo(NodoAtributo nodo, NodoClase nodoClaseActiva)
 		{
 			if (nodoClaseActiva.Lexema != nodo.Lexema)
@@ -61,8 +62,154 @@ namespace Compi
 				//Mandar error de nombre del atributo igual al nombre de su clase
 			}
 		}
+		#endregion
+
+		#region Metodos TS Metodos
+		public Tuple<Estado,string> InsertarNodoMetodo(NodoMetodo nodo, List<NodoVariables> misParametros, NodoClase nodoClaseActiva)
+		{
+			if (nodoClaseActiva.Lexema != nodo.Lexema)
+			{
+				//Checar que no existe un nombre de atributo igual al nombre del metodo
+
+				if (!nodoClaseActiva.TSM.ContainsKey(nodo.Lexema))
+				{
+					if (misParametros != null)
+					{
+						//Checar que el nombre del parametro no exista
+						foreach (var item in misParametros)
+						{
+							int iguales = 0;
+							foreach (var parametro in misParametros)
+							{
+								if (parametro.Lexema == item.Lexema)
+								{
+									iguales++;
+									if (iguales > 1)
+									{
+										return Tuple.Create(Estado.DuplicadoVariableMetodo, nodo.Lexema);
+									}
+								}
+							}
+							nodo.TSV.Add(item.Lexema, item);
+						}
+						nodoClaseActiva.TSM.Add(nodo.Lexema, nodo);
+						return Tuple.Create(Estado.Insertado, nodo.Lexema);
+					}
+					return Tuple.Create(Estado.Insertado, nodo.Lexema);
+				}
+				else
+				{
+					// sobrecarga de metodos
+					List<NodoVariables> listaParametros = ObtenerParametrosMetodo(nodo.Lexema, nodoClaseActiva);
+					if (listaParametros.Count != misParametros.Count)
+					{
+						if (misParametros.Count != 0)
+						{
+							//Checar que el nombre del parametro no exista
+							foreach (var item in misParametros)
+							{
+								int iguales = 0;
+								foreach (var parametro in misParametros)
+								{
+									if (parametro.Lexema == item.Lexema)
+									{
+										iguales++;
+										if (iguales > 1)
+										{
+											return Tuple.Create(Estado.DuplicadoVariableMetodo, "null");
+										}
+									}
+								}
+								nodo.TSV.Add(item.Lexema, item);
+							}
+							Random randomNumber = new Random();
+							string nombreMetodo = nodo.Lexema + "@" + randomNumber.Next(10000, 99999);
+							nodo.Lexema = nombreMetodo;
+							nodoClaseActiva.TSM.Add(nombreMetodo, nodo);
+							return Tuple.Create(Estado.Insertado, nombreMetodo);
+						}
+						else
+						{
+							if (listaParametros.Count == 0)
+							{
+								return Tuple.Create(Estado.DuplicadoVariableMetodo, "null");
+							}
+							else
+							{
+								Random randomNum = new Random();
+								string nombreM = nodo.Lexema + "@" + randomNum.Next(10000, 99999);
+								nodo.Lexema = nombreM;
+								nodoClaseActiva.TSM.Add(nombreM, nodo);
+								return Tuple.Create(Estado.Insertado, nombreM);
+							}
+						}
+					}
+					Boolean duplicado = true;
+					for (int i = 0; i < misParametros.Count; i++)
+					{
+						if (misParametros[i].Lexema != listaParametros[i].Lexema || misParametros[i].MiTipo != listaParametros[i].MiTipo)
+						{
+							duplicado = false;
+						}
+					}
+					if (duplicado)
+					{
+						return Tuple.Create(Estado.Duplicado, "null");
+					}
+					if (misParametros != null)
+					{
+						//Checa que el nombre del parametro no exite
+						foreach (var item in misParametros)
+						{
+							int iguales = 0;
+							foreach (var parametro in misParametros)
+							{
+								if (parametro.Lexema == item.Lexema)
+								{
+									iguales++;
+									if (iguales > 1)
+									{
+										return Tuple.Create(Estado.DuplicadoVariableMetodo, "null");
+									}
+								}
+							}
+							nodo.TSV.Add(item.Lexema, item);
+						}
+					}
+					sobrecargas++;
+					string nombre = nodo.Lexema + "@" + sobrecargas;
+					nodo.Lexema = nombre;
+					nodoClaseActiva.TSM.Add(nombre, nodo);
+					return Tuple.Create(Estado.Insertado, nombre);
+				}
+			}
+			else
+			{
+				return Tuple.Create(Estado.DuplicadoMetodoConClase, "");
+			}
+		}
+
+		public List<NodoVariables> ObtenerParametrosMetodo(string lexema, NodoClase nodoClaseActiva)
+		{
+			var non = nodoClaseActiva.TSM.Values;
+			foreach (var metodo in non)
+			{
+				if (metodo.Lexema == lexema)
+				{
+					List<NodoVariables> listaV = new List<NodoVariables>();
+					foreach (var variable in metodo.TSV.Values)
+					{
+						listaV.Add(variable);
+					}
+					return listaV;
+				}
+			}
+			return null;
+		}
+		#endregion
 	}
 
+	#region Nodos
 	public class NodoClase
 	{
 		private string lexema;
@@ -128,6 +275,7 @@ namespace Compi
 
 
 		public Dictionary<object, NodoAtributo> TSA = new Dictionary<object, NodoAtributo>();
+		public Dictionary<object, NodoMetodo> TSM = new Dictionary<object, NodoMetodo>();
 	}
 	public class NodoAtributo
 	{
@@ -248,7 +396,7 @@ namespace Compi
 
 		#endregion
 
-		public Dictionary<object, NodoVariables> TablaSimbolosVariables = new Dictionary<object, NodoVariables>();
+		public Dictionary<object, NodoVariables> TSV = new Dictionary<object, NodoVariables>();
 	}
 	public class NodoVariables
 	{
@@ -256,7 +404,7 @@ namespace Compi
 		private string lexema;
 		private TipoDato miTipo;
 		private string valor;
-		private TipoVariable tipoVariable;
+		
 
 		#region Encapsulamiento NodoVariables
 		
@@ -313,24 +461,11 @@ namespace Compi
 			}
 
 
-		}
-		public TipoVariable TipoVariable
-		{
-			get
-			{
-				return TipoVariable;
-			}
-
-			set
-			{
-				tipoVariable = value;
-			}
-
-
-		}
-		
+		}		
 		#endregion
 	}
+
+	#endregion
 
 	#region Alcance, Tipo de Datos, Tipo Variables, Estados
 
@@ -361,16 +496,11 @@ namespace Compi
 	{
 		Void,
 		Int,
+		Float,
 		String,
 		Char,
-		Boolean
+		Bool
 	}
-	public enum TipoVariable
-	{
-		Reference,
-		Primitive
-	}
-
 	#endregion
 
 }

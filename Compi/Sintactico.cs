@@ -373,6 +373,7 @@ namespace Compi
 						else
 						{
 							//error semantico de Herencia?
+							//return false
 						}
 
 					}
@@ -399,6 +400,7 @@ namespace Compi
 					else if (estadoClase == Estado.Duplicado)
 					{
 						//Error Semantico clase actual duplicada
+						//retunr flase
 					}
 					Boolean terminacionClase = false;
 					while (!terminacionClase)
@@ -417,59 +419,140 @@ namespace Compi
 							if (estadoNodoAtributo == Estado.Duplicado)
 							{
 								//Error Semantico el atributo actual esta duplicado
-								
+								//return false
 							}
 							else if (estadoNodoAtributo == Estado.DuplicadoAtributoConClase)
 							{
 								//Error Semantico el atributo actual tiene el mismo nombre de la clase
+								//return false
 							}
 							if (ListaToken[i + 1].lexema == "=")
 							{
 								nuevoAtributo.Valor = ListaToken[i + 2].lexema;
+								int puntoYcoma = i + 3;
+								i = puntoYcoma + 1;
 							}
-							int puntoYcoma = i + 3;
-							i = puntoYcoma + 1;
-						}
-						else
-						{
-							int puntoYcoma = i + 1;
-							i = puntoYcoma;
+							else
+							{
+								int puntoYcoma = i + 1;
+								i = puntoYcoma;
+							}
 						}
 						if (ListaToken[i].estado == -80)
 						{
 							break;
 						}
-					}
 
-					//Insertar metodo
-					//Entra con palabra reservda para el tipo del metodo
-					if (new[] {-103, -107, -120, -126, -160, -154}.Contains(ListaToken[i].estado) && ListaToken[i + 1].estado == -4 && ListaToken[i + 2].lexema == "(")
-					{
-						string nombreMetodo = "";
-						while (ListaToken[i].lexema != "{")
+						//Insertar metodo
+						//Entra con palabra reservda para el tipo del metodo
+						if (new[] { -103, -107, -120, -126, -160, -154 }.Contains(ListaToken[i].estado) && ListaToken[i + 1].estado == -4 && ListaToken[i + 2].lexema == "(")
 						{
-							i++;
-						}
-						Boolean terminacionMetodo = false;
-						while (!terminacionMetodo)
-						{
-							int inicioDefinicionMetodo = 0;
-							if (ListaToken[i].lexema == "{")
+							string nombreMetodo = "";
+							while (ListaToken[i].lexema != "{")
 							{
-								inicioDefinicionMetodo = i;
-								int iTemporal = i;
-								while (ListaToken[iTemporal].lexema != "(")
+								i++;
+							}
+							Boolean terminacionMetodo = false;
+							while (!terminacionMetodo)
+							{
+								int inicioDefinicionMetodo = 0;
+								if (ListaToken[i].lexema == "{")
 								{
-									iTemporal--;
+									inicioDefinicionMetodo = i;
+									int iTemporal = i;
+									while (ListaToken[iTemporal].lexema != "(")
+									{
+										iTemporal--;
+									}
+									NodoMetodo nuevoMetodo = new NodoMetodo();
+
+									nombreMetodo = ListaToken[iTemporal - 1].lexema;
+									nuevoMetodo.Lexema = ListaToken[iTemporal - 1].lexema;
+									metodoActivo = ListaToken[iTemporal - 1].lexema;
+									nuevoMetodo.MiRegreso = conversionLexemaRegreso(ListaToken[iTemporal - 2].lexema);
+
+									if (new[] { -132, -133, -134 }.Contains(ListaToken[iTemporal - 4].estado))
+									{
+										nuevoMetodo.MiAlcance = conversionoLexemaAlcance(ListaToken[iTemporal - 4].lexema);
+									}
+
+									//Se mueve el puntero al inicio de la definicion de parametros
+									i = iTemporal + 1;
+
+									//insertar parametros
+									List<NodoVariables> listaVariables = new List<NodoVariables>();
+									while (ListaToken[i].lexema != ")")
+									{
+										NodoVariables nuevaVariable = new NodoVariables();
+										nuevaVariable.MiTipo = conversionLexemaTipo(ListaToken[i].lexema);
+										i += 1;
+										nuevaVariable.Lexema = ListaToken[i].lexema;
+										listaVariables.Add(nuevaVariable);
+										if (ListaToken[i + 1].lexema == ",")
+										{
+											i += 2;
+										}
+										else
+										{
+											i++;
+										}
+
+									}
+
+									// Insertar nodo varaible en nodo metodo
+									var metodo = ts.InsertarNodoMetodo(nuevoMetodo, listaVariables, nuevaClase);
+									if (metodo.Item1 == Estado.DuplicadoVariableMetodo)
+									{
+										//Error Semantico Parametro duplicado con el metodo "nuevoMetodo.Lexema" y tomar la linea
+										//return false;
+									}
+									else if (metodo.Item1 == Estado.Duplicado)
+									{
+										//Error Semantico Metodo duplicado "nuevoMetodo.Lexema" y tomar linea
+										//return false;
+									}
+									else if (metodo.Item1 == Estado.DuplicadoMetodoConClase)
+									{
+										//Error semantico metodo "nuevoMetodo.Lexema" duplicado con nombre de clase, tomar linea
+									}
+									nombreMetodo = metodo.Item2;
+									//Se mueve el index despues de cuerpo de clase: "{" + 1
+									i = inicioDefinicionMetodo + 1;
+
 								}
-								NodoMetodo nuevoMetodo = new NodoMetodo();
+
+								//insertar
 							}
 						}
+
+
 					}
+
 
 				}
 
 
+			}
+		}
+
+		private Regreso conversionLexemaRegreso(string lexema)
+		{
+			switch (lexema)
+			{
+				case "int":
+					return Regreso.Int;
+				case "float":
+					return Regreso.Float;
+				case "string":
+					return Regreso.String;
+				case "char":
+					return Regreso.Char;
+				case "bool":
+					return Regreso.Bool;
+				case "void":
+					return Regreso.Void;
+				default:
+					return Regreso.Void; //cambiar por error semantico return invalido
 			}
 		}
 
