@@ -189,22 +189,21 @@ namespace Compi
 			}
 		}
 
-		public List<NodoVariables> ObtenerParametrosMetodo(string lexema, NodoClase nodoClaseActiva)
+		public List<NodoMetodo> ObtenerParametrosMetodos(string lexema, NodoClase nodoClaseActiva)
 		{
 			var non = nodoClaseActiva.TSM.Values;
+			List<NodoMetodo> listaMetodos = new List<NodoMetodo>();
 			foreach (var metodo in non)
 			{
-				if (metodo.Lexema == lexema)
+				if (metodo.Lexema.Length >= lexema.Length)
 				{
-					List<NodoVariables> listaV = new List<NodoVariables>();
-					foreach (var variable in metodo.TSV.Values)
+					if (metodo.Lexema.Substring(0, lexema.Length) == lexema)
 					{
-						listaV.Add(variable);
+						listaMetodos.Add(metodo);
 					}
-					return listaV;
 				}
 			}
-			return null;
+			return listaMetodos;
 		}
 
 		public List<NodoVariables> ObtenerParametrosMetodo(string lexema, NodoClase nodoClaseActiva, Boolean soloArgumentos)
@@ -217,8 +216,14 @@ namespace Compi
 					List<NodoVariables> listaV = new List<NodoVariables>();
 					foreach (var variable in metodo.TSV.Values)
 					{
-						listaV.Add(variable);
-
+						if (soloArgumentos)
+						{
+							listaV.Add(variable);
+						}
+						else
+						{
+							listaV.Add(variable);
+						}
 					}
 					return listaV;
 				}
@@ -272,6 +277,79 @@ namespace Compi
 			}
 			return false;
 		}
+
+		public Boolean InvocacionValida(NodoClase nodoClaseActiva, string metodoActual, string metodoInvocado, List<string> listaParametros)
+		{
+			List<NodoMetodo> listaMetodos = ObtenerParametrosMetodos(metodoInvocado, nodoClaseActiva);
+			List<NodoVariables> listaVariables = ObtenerParametrosMetodo(metodoInvocado, nodoClaseActiva, true);
+			if (listaMetodos.Count == 1)
+			{
+				if (listaVariables.Count != listaParametros.Count)
+				{
+					return false;
+				}
+				for (int i = 0; i < listaParametros.Count; i++)
+				{
+					if (listaParametros[i] == "STRING.")
+					{
+						if (TipoDato.String != listaVariables[i].MiTipo)
+						{
+							return false;
+						}
+						continue;
+					}
+					if (TipoNodoVariable(nodoClaseActiva, metodoActual, listaParametros[i]) == TipoDato.Float && (listaVariables[i].miTipo == TipoDato.Float || listaVariables[i].miTipo == TipoDato.Double))
+					{
+						continue;
+					}
+					if (TipoNodoVariable(nodoClaseActiva, metodoActual, listaParametros[i]) != listaVariables[i].MiTipo)
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+			else
+			{
+				foreach (var metodo in listaMetodos)
+				{
+					if (metodo.TSV.Count != listaParametros.Count)
+					{
+						continue;
+					}
+					else if ((metodo.TSV.Count == 0 && listaParametros.Count == 0))
+					{
+						return true;
+					}
+					List<NodoVariables> listaVariables2 = ObtenerParametrosMetodo(metodo.Lexema, nodoClaseActiva, true);
+					Boolean salto = false;
+					for (int i = 0; i < listaParametros.Count; i++)
+					{
+						TipoDato dato = stringTipoDato(listaParametros[i]);
+						if (dato != listaVariables2[i].MiTipo && (dato == TipoDato.Float && listaVariables2[i].MiTipo == TipoDato.Double))
+						{
+							if (!(listaParametros[i] == "STRING." && listaVariables2[i].MiTipo == TipoDato.String))
+							{
+								salto = true;
+
+							}
+						}
+						if (i == listaParametros.Count - 1 && salto == false)
+						{
+							return true;
+						}
+
+					}
+					if (salto)
+					{
+						continue;
+						salto = false;
+					}
+				}
+				return false;
+			}
+		}
+
 		#endregion
 	}
 

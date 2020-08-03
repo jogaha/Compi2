@@ -533,13 +533,13 @@ namespace Compi
 										nuevaVariable.Lexema = ListaToken[i].lexema;
 										if (ListaToken[i + 1].lexema == "=")
 										{
-											int iTemporal = i;
-											while (ListaToken[iTemporal].lexema != ";")
+											int iTemp = i;
+											while (ListaToken[iTemp].lexema != ";")
 											{
-												iTemporal++;
+												iTemp++;
 											}
 
-											List<Token> miListaTemporal = ListaToken.GetRange(i, iTemporal - (i - 1));
+											List<Token> miListaTemporal = ListaToken.GetRange(i, iTemp - (i - 1));
 
 											Estado estadoMetodo = ts.InsertarNodoVariable(nuevaVariable, nuevaClase, nombreMetodo);
 											if (estadoMetodo == Estado.DuplicadoVariableMetodo)
@@ -569,25 +569,25 @@ namespace Compi
 										{
 											if (ListaToken[i + 1].lexema == "=")
 											{
-												int iTemporal = i + 2;
-												while (ListaToken[iTemporal].lexema == ";")
+												int iTemp = i + 2;
+												while (ListaToken[iTemp].lexema == ";")
 												{
-													if (ListaToken[iTemporal].estado == -4)
+													if (ListaToken[iTemp].estado == -4)
 													{
-														Boolean existeVar = ts.ExisteNodoVariable(nuevaClase, nombreMetodo, ListaToken[iTemporal].lexema);
+														Boolean existeVar = ts.ExisteNodoVariable(nuevaClase, nombreMetodo, ListaToken[iTemp].lexema);
 														if (!existeVar)
 														{
 															//Error Semantico la variable ListaToken[iTemporal].Lexema no ha sido previamente definida. tomar la linea
 															//return false;
 														}
 													}
-													else if (ListaToken[iTemporal].estado == -1 || ListaToken[iTemporal].estado == -2)
+													else if (ListaToken[iTemp].estado == -1 || ListaToken[iTemp].estado == -2)
 													{
 														nuevaVariable.Valor = ListaToken[i].lexema;
 													}
-													iTemporal++;
+													iTemp++;
 												}
-												i = iTemporal;
+												i = iTemp;
 											}
 										}
 										else
@@ -605,7 +605,9 @@ namespace Compi
 										{
 											listaArgumentos.Add(ListaToken[iTemporal].lexema);
 										}
+										iTemporal++;
 									}
+									Boolean invocacionValida = ts.InvocacionValida(nuevaClase, nombreMetodo, ListaToken[i].lexema, listaArgumentos);
 								}
 							}
 						}
