@@ -347,7 +347,7 @@ namespace Compi
 
 			return result;
 		}
-		public void insertarTS(List<Token> ListaToken) 
+		public Boolean insertarTS(List<Token> ListaToken) 
 		{
 			List<NodoClase> listaClases = new List<NodoClase>();
 			NodoClase nuevaClase = new NodoClase();
@@ -561,7 +561,7 @@ namespace Compi
 									}
 
 									//uso de variable definida en parametros
-									else if (ListaToken[i + 1 ].lexema != "(")
+									else if (ListaToken[i + 1].estado != -5 && ListaToken[i + 1 ].lexema != "(")
 									{
 										//Encontrar variable mencionada
 										Boolean existeVariable = ts.ExisteNodoVariable(nuevaClase, nombreMetodo, ListaToken[i].lexema);
@@ -569,6 +569,10 @@ namespace Compi
 										{
 											if (ListaToken[i + 1].lexema == "=")
 											{
+												if (ListaToken[i + 2].estado == -5)
+												{
+													nuevaVariable.Valor = ListaToken[i + 2].lexema;
+												}
 												int iTemp = i + 2;
 												while (ListaToken[iTemp].lexema == ";")
 												{
@@ -596,18 +600,46 @@ namespace Compi
 											//return false;
 										}
 									}
-
-									List<string> listaArgumentos = new List<string>();
-									int iTemporal = i + 2;
-									while (ListaToken[iTemporal].lexema != ")")
+									//invocacion del metodo pendiente
+									else if (ListaToken[i + 1].estado != -5)
 									{
-										if (new[] { -4,-1,-2}.Contains(ListaToken[iTemporal].estado))
+										List<string> listaArgumentos = new List<string>();
+										int iTemporal = i + 2;
+										while (ListaToken[iTemporal].lexema != ")")
 										{
-											listaArgumentos.Add(ListaToken[iTemporal].lexema);
+											if (new[] { -4, -1, -2 }.Contains(ListaToken[iTemporal].estado))
+											{
+												listaArgumentos.Add(ListaToken[iTemporal].lexema);
+											}
+											else if (ListaToken[iTemporal].estado == -5)
+											{
+												listaArgumentos.Add("STRING.");
+												iTemporal += 1;
+											}
+											iTemporal++;
 										}
-										iTemporal++;
+										Boolean invocacionValida = ts.InvocacionValida(nuevaClase, nombreMetodo, ListaToken[i].lexema, listaArgumentos);
+										if (!invocacionValida)
+										{
+											//Error Semantico la invocacion ListaTokens[i].lexema no tiene los parametros correctos, tomar linea.
+										}
+										i = iTemporal + 1;
 									}
-									Boolean invocacionValida = ts.InvocacionValida(nuevaClase, nombreMetodo, ListaToken[i].lexema, listaArgumentos);
+								}
+
+								if (ListaToken[i].lexema == "cout")
+								{
+									int iTemp = i;
+									while (ListaToken[iTemp].estado == -17)
+									{
+										iTemp++;
+									}
+									//List<Token> miListaTemporal = ListaToken.GetRange()
+								}
+
+								if (ListaToken[i].lexema == "}")
+								{
+									terminacionMetodo = true;
 								}
 							}
 						}
@@ -629,6 +661,8 @@ namespace Compi
 
 
 			}
+			ts = ts;
+			return true;
 		}
 
 		private Regreso conversionLexemaRegreso(string lexema)

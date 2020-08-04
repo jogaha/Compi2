@@ -100,7 +100,7 @@ namespace Compi
 				else
 				{
 					// sobrecarga de metodos
-					List<NodoVariables> listaParametros = ObtenerParametrosMetodo(nodo.Lexema, nodoClaseActiva);
+					List<NodoVariables> listaParametros = ObtenerParametrosMetodo(nodo.Lexema, nodoClaseActiva,true);
 					if (listaParametros.Count != misParametros.Count)
 					{
 						if (misParametros.Count != 0)
@@ -298,7 +298,7 @@ namespace Compi
 						}
 						continue;
 					}
-					if (TipoNodoVariable(nodoClaseActiva, metodoActual, listaParametros[i]) == TipoDato.Float && (listaVariables[i].miTipo == TipoDato.Float || listaVariables[i].miTipo == TipoDato.Double))
+					if (TipoNodoVariable(nodoClaseActiva, metodoActual, listaParametros[i]) == TipoDato.Float && (listaVariables[i].MiTipo == TipoDato.Float))
 					{
 						continue;
 					}
@@ -326,7 +326,7 @@ namespace Compi
 					for (int i = 0; i < listaParametros.Count; i++)
 					{
 						TipoDato dato = stringTipoDato(listaParametros[i]);
-						if (dato != listaVariables2[i].MiTipo && (dato == TipoDato.Float && listaVariables2[i].MiTipo == TipoDato.Double))
+						if (dato != listaVariables2[i].MiTipo && (dato == TipoDato.Float))
 						{
 							if (!(listaParametros[i] == "STRING." && listaVariables2[i].MiTipo == TipoDato.String))
 							{
@@ -348,6 +348,64 @@ namespace Compi
 				}
 				return false;
 			}
+		}
+
+		private TipoDato stringTipoDato(string tipo)
+		{
+			if (tipo.Substring(0,1) == "\"\"")
+			{
+				return TipoDato.String;
+			}
+			int n;
+			bool IsNumeric = int.TryParse(tipo, out n);
+
+			if (IsNumeric)
+			{
+				return TipoDato.Int;
+			}
+			else
+			{
+				Double num = 0;
+				bool isDouble = false;
+				isDouble = Double.TryParse(tipo, out num);
+				if (isDouble)
+				{
+					return TipoDato.Float;
+				}
+			}
+			return TipoDato.NADA;
+		}
+
+		private TipoDato TipoNodoVariable(NodoClase nodoClaseActiva, string nombreMetodo, string lexico)
+		{
+			List<NodoVariables> listaVariables = ObtenerParametrosMetodo(nombreMetodo, nodoClaseActiva, false);
+			foreach (var variable in listaVariables)
+			{
+				int n;
+				bool isNumeric = int.TryParse(lexico, out n);
+
+				if (isNumeric)
+				{
+					return TipoDato.Int;
+				}
+				else
+				{
+					Double num = 0;
+					bool isDouble = false;
+					isDouble = Double.TryParse(lexico, out num);
+					if (isDouble)
+					{
+						return TipoDato.Float;
+
+					}
+				}
+
+				if (variable.Lexema == lexico)
+				{
+					return variable.MiTipo;
+				}
+			}
+			return TipoDato.NADA;
 		}
 
 		#endregion
