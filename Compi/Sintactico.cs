@@ -372,7 +372,7 @@ namespace Compi
 						}
 						else
 						{
-							//error semantico de Herencia?
+							//error semantico de Herencia no se encontro la superclase
 							//return false
 						}
 
@@ -411,9 +411,13 @@ namespace Compi
 							NodoAtributo nuevoAtributo = new NodoAtributo();
 							nuevoAtributo.Lexema = ListaToken[i].lexema;
 							nuevoAtributo.MiTipo = this.conversionLexemaTipo(ListaToken[i - 1].lexema);
-							if (new[] {-132,-133,-134 }.Contains(ListaToken[i - 2].estado))
+							if (new[] {-132,-133,-134 }.Contains(ListaToken[i - 3].estado))
 							{
 								nuevoAtributo.MiAlcance = conversionoLexemaAlcance(ListaToken[i - 2].lexema);
+							}
+							else
+							{
+								nuevoAtributo.MiAlcance = Alcance.Private;
 							}
 							Estado estadoNodoAtributo = ts.InsertarNodoAtributo(nuevoAtributo, nuevaClase);
 							if (estadoNodoAtributo == Estado.Duplicado)
@@ -438,14 +442,14 @@ namespace Compi
 								i = puntoYcoma;
 							}
 						}
-						if (ListaToken[i].estado == -80)
+						if (ListaToken[i + 1].lexema == "}")
 						{
 							break;
 						}
 
 						//Insertar metodo
 						//Entra con palabra reservda para el tipo del metodo
-						if (new[] { -103, -107, -120, -126, -160, -154 }.Contains(ListaToken[i].estado) && ListaToken[i + 1].estado == -4 && ListaToken[i + 2].lexema == "(")
+						if ((new[] { -103, -107, -120, -126, -160, -154 }.Contains(ListaToken[i].estado) && ListaToken[i + 1].estado == -4 && ListaToken[i + 2].lexema == "(") || (ListaToken[i].estado == -4 && ListaToken[i + 1].lexema == "(") )
 						{
 							string nombreMetodo = "";
 							while (ListaToken[i].lexema != "{")
@@ -474,6 +478,10 @@ namespace Compi
 									if (new[] { -132, -133, -134 }.Contains(ListaToken[iTemporal - 4].estado))
 									{
 										nuevoMetodo.MiAlcance = conversionoLexemaAlcance(ListaToken[iTemporal - 4].lexema);
+									}
+									else if (new[] { -132, -133, -134 }.Contains(ListaToken[iTemporal - 3].estado))
+									{
+										nuevoMetodo.MiAlcance = conversionoLexemaAlcance(ListaToken[iTemporal - 3].lexema);
 									}
 
 									//Se mueve el puntero al inicio de la definicion de parametros
@@ -561,7 +569,7 @@ namespace Compi
 									}
 
 									//uso de variable definida en parametros
-									else if (ListaToken[i + 1].estado != -5 && ListaToken[i + 1 ].lexema != "(")
+									else if (ListaToken[i + 1 ].lexema != "(")
 									{
 										//Encontrar variable mencionada
 										Boolean existeVariable = ts.ExisteNodoVariable(nuevaClase, nombreMetodo, ListaToken[i].lexema);
@@ -573,25 +581,29 @@ namespace Compi
 												{
 													nuevaVariable.Valor = ListaToken[i + 2].lexema;
 												}
-												int iTemp = i + 2;
-												while (ListaToken[iTemp].lexema == ";")
+												else
 												{
-													if (ListaToken[iTemp].estado == -4)
+													int iTemp = i + 2;
+													while (ListaToken[iTemp].lexema != ";")
 													{
-														Boolean existeVar = ts.ExisteNodoVariable(nuevaClase, nombreMetodo, ListaToken[iTemp].lexema);
-														if (!existeVar)
+														if (ListaToken[iTemp].estado == -4)
 														{
-															//Error Semantico la variable ListaToken[iTemporal].Lexema no ha sido previamente definida. tomar la linea
-															//return false;
+															Boolean existeVar = ts.ExisteNodoVariable(nuevaClase, nombreMetodo, ListaToken[iTemp].lexema);
+															if (!existeVar)
+															{
+																//Error Semantico la variable ListaToken[iTemporal].Lexema no ha sido previamente definida. tomar la linea
+																//return false;
+															}
 														}
+														else if (ListaToken[iTemp].estado == -1 || ListaToken[iTemp].estado == -2)
+														{
+															nuevaVariable.Valor = ListaToken[iTemp].lexema;
+														}
+														iTemp++;
 													}
-													else if (ListaToken[iTemp].estado == -1 || ListaToken[iTemp].estado == -2)
-													{
-														nuevaVariable.Valor = ListaToken[i].lexema;
-													}
-													iTemp++;
+													i = iTemp;
 												}
-												i = iTemp;
+												
 											}
 										}
 										else
@@ -600,7 +612,7 @@ namespace Compi
 											//return false;
 										}
 									}
-									//invocacion del metodo pendiente
+									//invocacion del metodo
 									else if (ListaToken[i + 1].estado != -5)
 									{
 										List<string> listaArgumentos = new List<string>();
@@ -641,6 +653,7 @@ namespace Compi
 								{
 									terminacionMetodo = true;
 								}
+								i++;
 							}
 						}
 
@@ -680,6 +693,8 @@ namespace Compi
 				case "bool":
 					return Regreso.Bool;
 				case "void":
+					return Regreso.Void;
+				case ":":
 					return Regreso.Void;
 				default:
 					return Regreso.Void; //cambiar por error semantico return invalido

@@ -185,7 +185,7 @@ namespace Compi
 			}
 			else
 			{
-				return Tuple.Create(Estado.DuplicadoMetodoConClase, "");
+				return Tuple.Create(Estado.DuplicadoMetodoConClase, nodo.Lexema);
 			}
 		}
 
@@ -606,7 +606,6 @@ namespace Compi
 		private string lexema;
 		private TipoDato miTipo;
 		private string valor;
-		
 
 		#region Encapsulamiento NodoVariables
 		
@@ -703,6 +702,7 @@ namespace Compi
 		Char,
 		Bool
 	}
+
 	#endregion
 
 }
