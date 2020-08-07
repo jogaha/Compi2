@@ -341,6 +341,15 @@ namespace Compi
 			{
 				insertarTS(ListaToken);
 				result[0] = "Analisis Sintactico Finalizado sin errores";
+				if(!HuboErrores)
+                {
+					result[0] = "Analisis Semantico Finalizado sin errores";
+				}
+                else
+                {
+					result[0] = "Ocurrieron errores";
+					result[1] = "ERROR";
+				}
 			}
 
 
@@ -375,7 +384,7 @@ namespace Compi
 							//error semantico de Herencia no se encontro la superclase
 							HuboErrores = true;
 							retorno = "SuperClase " + ListaToken[i + 3].lexema + " no definida";
-							ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-500", "Semantico"))
+							ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-500", "Semantico"));
 							//return false
 						}
 
@@ -1175,7 +1184,7 @@ namespace Compi
 			if (ReglaEsperada < 1000)
 			{
 				retorno += BuscarToken(ReglaEsperada);
-				ErroresSintacticos.Add(new Error(retorno, lineaToken, "-450"));
+				ErroresSintacticos.Add(new Error(retorno, lineaToken, "-450","Sintactico"));
 				retorno = "";
 				Cola++;
 				return;
@@ -1192,7 +1201,7 @@ namespace Compi
 			}
 			retorno = retorno.Substring(0, retorno.Length - 6);
 
-			ErroresSintacticos.Add(new Error(retorno, lineaToken, "-450"));
+			ErroresSintacticos.Add(new Error(retorno, lineaToken, "-450", "Sintactico"));
 			retorno = "";
 
 
