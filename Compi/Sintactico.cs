@@ -405,6 +405,7 @@ namespace Compi
 					Boolean terminacionClase = false;
 					while (!terminacionClase)
 					{
+						List<NodoAtributo> listaAtributos = new List<NodoAtributo>();
 						//insertar atributo
 						if (ListaToken[i].estado == -4 && ListaToken[i + 1].lexema != "(")
 						{
@@ -432,9 +433,18 @@ namespace Compi
 							}
 							if (ListaToken[i + 1].lexema == "=")
 							{
-								nuevoAtributo.Valor = ListaToken[i + 2].lexema;
-								int puntoYcoma = i + 3;
-								i = puntoYcoma + 1;
+								
+								
+								string expresion = "";
+								int iTemp = i + 2;
+								while (ListaToken[iTemp].lexema != ";")
+								{
+									expresion += ListaToken[iTemp].lexema;
+									iTemp++;
+								}
+								nuevoAtributo.Valor = expresion;
+								i = iTemp + 1;
+
 							}
 							else
 							{
