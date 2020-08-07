@@ -373,6 +373,9 @@ namespace Compi
 						else
 						{
 							//error semantico de Herencia no se encontro la superclase
+							HuboErrores = true;
+							retorno = "SuperClase " + ListaToken[i + 3].lexema + " no definida";
+							ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-500", "Semantico"))
 							//return false
 						}
 
@@ -400,6 +403,9 @@ namespace Compi
 					else if (estadoClase == Estado.Duplicado)
 					{
 						//Error Semantico clase actual duplicada
+						HuboErrores = true;
+						retorno = "Clase " + nuevaClase.Lexema + " duplicada";
+						ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-501", "Semantico"));
 						//retunr flase
 					}
 					Boolean terminacionClase = false;
@@ -424,11 +430,17 @@ namespace Compi
 							if (estadoNodoAtributo == Estado.Duplicado)
 							{
 								//Error Semantico el atributo actual esta duplicado
+								HuboErrores = true;
+								retorno = "Atributo " + nuevoAtributo.Lexema + " duplicado";
+								ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-502", "Semantico"));
 								//return false
 							}
 							else if (estadoNodoAtributo == Estado.DuplicadoAtributoConClase)
 							{
 								//Error Semantico el atributo actual tiene el mismo nombre de la clase
+								HuboErrores = true;
+								retorno = "Atributo " + nuevoAtributo.Lexema + " tiene el mismo nombre de una clase";
+								ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-502", "Semantico"));
 								//return false
 							}
 							if (ListaToken[i + 1].lexema == "=")
@@ -522,16 +534,25 @@ namespace Compi
 									if (metodo.Item1 == Estado.DuplicadoVariableMetodo)
 									{
 										//Error Semantico Parametro duplicado con el metodo "nuevoMetodo.Lexema" y tomar la linea
+										HuboErrores = true;
+										retorno = "Parametro " + nuevoMetodo.Lexema + " duplicado en metodo " + metodoActivo;
+										ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-502", "Semantico"));
 										//return false;
 									}
 									else if (metodo.Item1 == Estado.Duplicado)
 									{
 										//Error Semantico Metodo duplicado "nuevoMetodo.Lexema" y tomar linea
+										HuboErrores = true;
+										retorno = "Metodo " + nuevoMetodo.Lexema + " duplicado";
+										ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-503", "Semantico"));
 										//return false;
 									}
 									else if (metodo.Item1 == Estado.DuplicadoMetodoConClase)
 									{
 										//Error semantico metodo "nuevoMetodo.Lexema" duplicado con nombre de clase, tomar linea
+										HuboErrores = true;
+										retorno = "Metodo " + nuevoMetodo.Lexema + " duplicado con nombre de clase";
+										ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-504", "Semantico"));
 										//return false;
 									}
 									nombreMetodo = metodo.Item2;
@@ -563,11 +584,17 @@ namespace Compi
 											if (estadoMetodo == Estado.DuplicadoVariableMetodo)
 											{
 												//Error semantico variable duplicada en metodo "ListaToken[i].lexema" tomar la linea
+												HuboErrores = true;
+												retorno = "Variable " + nuevaVariable.Lexema + " duplicada en metodo";
+												ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-505", "Semantico"));
 												//return false;
 											}
 											else if (estadoMetodo == Estado.Duplicado)
 											{
 												//Error semantico variable diplicada "ListaToken[i].lexema" tomar la linea
+												HuboErrores = true;
+												retorno = "Metodo " + nuevaVariable.Lexema + " duplicada";
+												ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-506", "Semantico"));
 												//return false;
 											}
 										}
@@ -602,6 +629,9 @@ namespace Compi
 															if (!existeVar)
 															{
 																//Error Semantico la variable ListaToken[iTemporal].Lexema no ha sido previamente definida. tomar la linea
+																HuboErrores = true;
+																retorno = "Variable " + ListaToken[iTemp].lexema + " no ha sido previamente definida";
+																ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-507", "Semantico"));
 																//return false;
 															}
 														}
@@ -619,6 +649,9 @@ namespace Compi
 										else
 										{
 											//Error Semantico la variable ListaToken[i].Lexema no ha sido previamente definida. tomar la linea
+											HuboErrores = true;
+											retorno = "Variable " + ListaToken[i].lexema + " no ha sido previamente definida";
+											ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-508", "Semantico"));
 											//return false;
 										}
 									}
@@ -644,6 +677,9 @@ namespace Compi
 										if (!invocacionValida)
 										{
 											//Error Semantico la invocacion ListaTokens[i].lexema no tiene los parametros correctos, tomar linea.
+											HuboErrores = true;
+											retorno = "Invocación " + ListaToken[i].lexema + " no tiene los parametros correctos";
+											ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-502", "Semantico"));
 										}
 										i = iTemporal + 1;
 									}
@@ -1171,11 +1207,13 @@ namespace Compi
 		public string Descripcion;
 		public int linea;
 		public string tipo;
-		public Error(string Descripcion, int linea, string tipo)
+		public string capa;
+		public Error(string Descripcion, int linea, string tipo, string capa)
 		{
 			this.Descripcion = Descripcion;
 			this.linea = linea;
 			this.tipo = tipo;
+			this.capa = capa;
 		}	
 	}
 
