@@ -218,6 +218,7 @@ namespace Compi
 		bool Seguir;
 		bool HuboErrores;
 		public TablaSimbolos ts = new TablaSimbolos();
+		public TablaSimbolos tablaFinal = new TablaSimbolos();
 		public string claseActiva;
 		public string metodoActivo;
 		List<Token> ListaToken;
@@ -339,7 +340,7 @@ namespace Compi
 
 			if (!HuboErrores)
 			{
-				insertarTS(ListaToken);
+				tablaFinal = insertarTS(ListaToken);
 				result[0] = "Analisis Sintactico Finalizado sin errores";
 				if(!HuboErrores)
                 {
@@ -356,7 +357,7 @@ namespace Compi
 
 			return result;
 		}
-		public Boolean insertarTS(List<Token> ListaToken) 
+		public TablaSimbolos insertarTS(List<Token> ListaToken) 
 		{
 			List<NodoClase> listaClases = new List<NodoClase>();
 			NodoClase nuevaClase = new NodoClase();
@@ -725,7 +726,7 @@ namespace Compi
 
 			}
 			ts = ts;
-			return true;
+			return ts;
 		}
 
 		private Regreso conversionLexemaRegreso(string lexema)
