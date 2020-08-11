@@ -8,3 +8,13 @@ C:\Users\jogah\Desktop\Compi\Compi\obj\Debug\Compi.csproj.GenerateResource.cache
 C:\Users\jogah\Desktop\Compi\Compi\obj\Debug\Compi.csproj.CoreCompileInputs.cache
 C:\Users\jogah\Desktop\Compi\Compi\obj\Debug\Compi.exe
 C:\Users\jogah\Desktop\Compi\Compi\obj\Debug\Compi.pdb
+C:\Users\Joel\Documents\Compilador C++\Compi2\Compi\bin\Debug\Compi.exe.config
+C:\Users\Joel\Documents\Compilador C++\Compi2\Compi\bin\Debug\Compi.exe
+C:\Users\Joel\Documents\Compilador C++\Compi2\Compi\bin\Debug\Compi.pdb
+C:\Users\Joel\Documents\Compilador C++\Compi2\Compi\obj\Debug\Compi.csprojResolveAssemblyReference.cache
+C:\Users\Joel\Documents\Compilador C++\Compi2\Compi\obj\Debug\Compi.Form1.resources
+C:\Users\Joel\Documents\Compilador C++\Compi2\Compi\obj\Debug\Compi.Properties.Resources.resources
+C:\Users\Joel\Documents\Compilador C++\Compi2\Compi\obj\Debug\Compi.csproj.GenerateResource.cache
+C:\Users\Joel\Documents\Compilador C++\Compi2\Compi\obj\Debug\Compi.csproj.CoreCompileInputs.cache
+C:\Users\Joel\Documents\Compilador C++\Compi2\Compi\obj\Debug\Compi.exe
+C:\Users\Joel\Documents\Compilador C++\Compi2\Compi\obj\Debug\Compi.pdb
