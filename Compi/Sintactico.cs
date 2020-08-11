@@ -697,46 +697,8 @@ namespace Compi
 										ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-508", "Semantico"));
 										//return false;
 									}
-									//invocacion del metodo
-									if (ListaToken[i + 1].lexema == "(")
-									{
-										List<string> listaArgumentos = new List<string>();
-										int iTemporal = i + 2;
-										while (ListaToken[iTemporal].lexema != ")")
-										{
-											if (new[] { -4, -1, -2 }.Contains(ListaToken[iTemporal].estado))
-											{
-												listaArgumentos.Add(ListaToken[iTemporal].lexema);
-											}
-											else if (ListaToken[iTemporal].estado == -5)
-											{
-												listaArgumentos.Add("STRING.");
-												iTemporal += 1;
-											}
-											iTemporal++;
-										}
-										Boolean invocacionValida = ts.InvocacionValida(nuevaClase, nombreMetodo, ListaToken[i].lexema, listaArgumentos);
-										if (!invocacionValida)
-										{
-											//Error Semantico la invocacion ListaTokens[i].lexema no tiene los parametros correctos, tomar linea.
-											HuboErrores = true;
-											retorno = "Invocación " + ListaToken[i].lexema + " no tiene los parametros correctos";
-											ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-502", "Semantico"));
-										}
-										i = iTemporal + 1;
-									}
+									
 								}
-
-								if (ListaToken[i].lexema == "cout")
-								{
-									int iTemp = i;
-									while (ListaToken[iTemp].estado == -17)
-									{
-										iTemp++;
-									}
-									//List<Token> miListaTemporal = ListaToken.GetRange()
-								}
-
 								if (ListaToken[i].lexema == "}")
 								{
 									terminacionMetodo = true;
