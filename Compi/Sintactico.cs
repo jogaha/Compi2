@@ -414,7 +414,7 @@ namespace Compi
 						//Error Semantico clase actual duplicada
 						HuboErrores = true;
 						retorno = "Clase " + nuevaClase.Lexema + " duplicada";
-						ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-501", "Semantico"));
+						ErroresSintacticos.Add(new Error(retorno, nuevaClase.RenglonDeDeclaracion, "-501", "Semantico"));
 						//retunr flase
 					}
 					Boolean terminacionClase = false;
@@ -506,10 +506,7 @@ namespace Compi
 								i = puntoYcoma;
 							}
 						}
-						if (ListaToken[i + 1].lexema == "}")
-						{
-							break;
-						}
+						
 
 						//Insertar metodo
 						//Entra con palabra reservda para el tipo del metodo
@@ -559,6 +556,7 @@ namespace Compi
 										nuevaVariable.MiTipo = conversionLexemaTipo(ListaToken[i].lexema);
 										i += 1;
 										nuevaVariable.Lexema = ListaToken[i].lexema;
+										nuevaVariable.MiAlcance = Alcance.Private;
 										listaVariables.Add(nuevaVariable);
 										if (ListaToken[i + 1].lexema == ",")
 										{
