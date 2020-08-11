@@ -631,7 +631,7 @@ namespace Compi
 											}
 											else if (estadoMetodo == Estado.Duplicado)
 											{
-												//Error semantico variable diplicada "ListaToken[i].lexema" tomar la linea
+												//Error semantico variable duplicada "ListaToken[i].lexema" tomar la linea
 												HuboErrores = true;
 												retorno = "Metodo " + nuevaVariable.Lexema + " duplicada";
 												ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-506", "Semantico"));
