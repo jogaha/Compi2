@@ -418,15 +418,25 @@ namespace Compi
 						//retunr flase
 					}
 					Boolean terminacionClase = false;
+					string tipoTemporal = "";
 					while (!terminacionClase)
 					{
-						List<NodoAtributo> listaAtributos = new List<NodoAtributo>();
+						
 						//insertar atributo
 						if (ListaToken[i].estado == -4 && ListaToken[i + 1].lexema != "(")
 						{
 							NodoAtributo nuevoAtributo = new NodoAtributo();
 							nuevoAtributo.Lexema = ListaToken[i].lexema;
-							nuevoAtributo.MiTipo = this.conversionLexemaTipo(ListaToken[i - 1].lexema);
+							if (ListaToken[i - 1].lexema == ",")
+							{
+								nuevoAtributo.MiTipo = this.conversionLexemaTipo(tipoTemporal);
+							}
+							else
+							{
+								nuevoAtributo.MiTipo = this.conversionLexemaTipo(ListaToken[i - 1].lexema);
+								tipoTemporal = ListaToken[i - 1].lexema;
+							}
+							
 							if (new[] {-132,-133,-134 }.Contains(ListaToken[i - 3].estado))
 							{
 								nuevoAtributo.MiAlcance = conversionoLexemaAlcance(ListaToken[i - 2].lexema);
@@ -456,12 +466,14 @@ namespace Compi
 							{
 								
 								
-								string expresion = "";
+								//string expresion = "";
 								int iTemp = i + 2;
-								while (ListaToken[iTemp].lexema != ";")
+								while (ListaToken[iTemp].lexema != ";" || ListaToken[iTemp].lexema == ",")
 								{
-									expresion += ListaToken[iTemp].lexema;
-									iTemp++;
+									if (new[] { -1,-2,-5,-6}.Contains(ListaToken[iTemp].estado))
+									{
+
+									}
 								}
 								nuevoAtributo.Valor = expresion;
 								i = iTemp + 1;
