@@ -363,7 +363,7 @@ namespace Compi
 			}
 		}
 
-		private TipoDato stringTipoDato(string tipo)
+		public TipoDato stringTipoDato(string tipo)
 		{
 			if (tipo.Substring(0,1) == "\"\"")
 			{
@@ -389,7 +389,7 @@ namespace Compi
 			return TipoDato.NADA;
 		}
 
-		private TipoDato TipoNodoVariable(NodoClase nodoClaseActiva, string nombreMetodo, string lexico)
+		public TipoDato TipoNodoVariable(NodoClase nodoClaseActiva, string nombreMetodo, string lexico)
 		{
 			List<NodoVariables> listaVariables = ObtenerParametrosMetodo(nombreMetodo, nodoClaseActiva, false);
 			foreach (var variable in listaVariables)
@@ -419,6 +419,18 @@ namespace Compi
 				}
 			}
 			return TipoDato.NADA;
+		}
+
+		public void buscarAtributo(NodoClase claseActiva, string lexema, string expresion)
+		{
+			foreach (var item in claseActiva.TSA.Values)
+			{
+				if (item.Lexema == lexema)
+				{
+					item.Valor = expresion;
+				}
+			}
+			
 		}
 
 		#endregion
