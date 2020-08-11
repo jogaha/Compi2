@@ -418,6 +418,7 @@ namespace Compi
 						//retunr flase
 					}
 					Boolean terminacionClase = false;
+					List<NodoAtributo> listaAtributos = new List<NodoAtributo>();
 					string tipoTemporal = "";
 					while (!terminacionClase)
 					{
@@ -462,18 +463,38 @@ namespace Compi
 								ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-502", "Semantico"));
 								//return false
 							}
+							else if (estadoNodoAtributo == Estado.Insertado)
+							{
+								listaAtributos.Add(nuevoAtributo);
+							}
 							if (ListaToken[i + 1].lexema == "=")
 							{
 								
 								
-								//string expresion = "";
+								string expresion = "";
 								int iTemp = i + 2;
 								while (ListaToken[iTemp].lexema != ";" || ListaToken[iTemp].lexema == ",")
 								{
-									if (new[] { -1,-2,-5,-6}.Contains(ListaToken[iTemp].estado))
+									if (ListaToken[iTemp].estado == -4)
 									{
-
+										Estado estadoAtributoAsignado = ts.verificarAtributoAsignacion(listaAtributos, ListaToken[iTemp].lexema);
+										if (estadoAtributoAsignado == Estado.Duplicado)
+										{
+											expresion +=  ListaToken[iTemp].lexema + " ";
+										}
+										else if (estadoAtributoAsignado == Estado.NoDeclarado)
+										{
+											HuboErrores = true;
+											retorno = "Atributo: '" + ListaToken[iTemp].lexema + "' no declarado";
+											//optimizar errores
+											ErroresSintacticos.Add(new Error(retorno, ListaToken[iTemp].linea, "-502", "Semantico"));
+										}
 									}
+									else
+									{
+										expresion += ListaToken[iTemp].lexema + " ";
+									}
+									iTemp++;
 								}
 								nuevoAtributo.Valor = expresion;
 								i = iTemp + 1;

@@ -206,6 +206,19 @@ namespace Compi
 			return listaMetodos;
 		}
 
+		public Estado verificarAtributoAsignacion(List<NodoAtributo> misAtributos, string lexema)
+		{
+			foreach (var item in misAtributos)
+			{
+				if (item.Lexema == lexema)
+				{
+					return Estado.Duplicado;
+				}
+			}
+			return Estado.NoDeclarado;
+		}
+
+
 		public List<NodoVariables> ObtenerParametrosMetodo(string lexema, NodoClase nodoClaseActiva, Boolean soloArgumentos)
 		{
 			var non = nodoClaseActiva.TSM.Values;
@@ -691,7 +704,8 @@ namespace Compi
 		Duplicado,
 		DuplicadoVariableMetodo,
 		DuplicadoAtributoConClase,
-		DuplicadoMetodoConClase
+		DuplicadoMetodoConClase,
+		NoDeclarado
 	}
 	public enum Regreso
 	{
