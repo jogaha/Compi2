@@ -8,7 +8,7 @@ namespace Compi
 {
 	public class TablaSimbolos
 	{
-		Dictionary<object, NodoClase> tablaSimbolosClase = new Dictionary<object, NodoClase>();
+		public Dictionary<object, NodoClase> tablaSimbolosClase = new Dictionary<object, NodoClase>();
 
 		public int sobrecargas = 0;
 		public int numeroEtiqueta = 1;
@@ -16,9 +16,9 @@ namespace Compi
 		#region Metodos TS Clase
 		public Estado InsertarNodoClase(NodoClase miNodoClase)
 		{
-			if (!tablaSimbolosClase.ContainsKey(miNodoClase.Lexema))
+			if (!tablaSimbolosClase.ContainsKey(miNodoClase.LexemaC))
 			{
-				tablaSimbolosClase.Add(miNodoClase.Lexema, miNodoClase);
+				tablaSimbolosClase.Add(miNodoClase.LexemaC, miNodoClase);
 				return Estado.Insertado;
 			}
 			else
@@ -43,7 +43,7 @@ namespace Compi
 		#region Metodos TS Atributo
 		internal Estado InsertarNodoAtributo(NodoAtributo nodo, NodoClase nodoClaseActiva)
 		{
-			if (nodoClaseActiva.Lexema != nodo.Lexema)
+			if (nodoClaseActiva.LexemaC != nodo.Lexema)
 			{
 				if (!nodoClaseActiva.TSA.ContainsKey(nodo.Lexema))
 				{
@@ -67,7 +67,7 @@ namespace Compi
 		#region Metodos TS Metodos
 		public Tuple<Estado,string> InsertarNodoMetodo(NodoMetodo nodo, List<NodoVariables> misParametros, NodoClase nodoClaseActiva)
 		{
-			if (nodoClaseActiva.Lexema != nodo.Lexema)
+			if (nodoClaseActiva.LexemaC != nodo.Lexema)
 			{
 				//Checar que no existe un nombre de atributo igual al nombre del metodo
 
@@ -445,7 +445,7 @@ namespace Compi
 		private int[] referencias;
 
 		#region Encapsulamiento NodoClase
-		public string Lexema
+		public string LexemaC
 		{
 			get
 			{

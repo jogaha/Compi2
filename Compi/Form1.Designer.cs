@@ -52,8 +52,11 @@
             this.lbl_Sintactico = new System.Windows.Forms.Label();
             this.lbl_Resultado = new System.Windows.Forms.Label();
             this.dgv_PreTabSim = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LexemaC = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Herencia = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RenglonDeDeclaracion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TSA = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TSM = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Lexico)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Sintactico)).BeginInit();
@@ -146,7 +149,7 @@
             // 
             this.rtb_Texto.AcceptsTab = true;
             this.rtb_Texto.Location = new System.Drawing.Point(16, 47);
-            this.rtb_Texto.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rtb_Texto.Margin = new System.Windows.Forms.Padding(4);
             this.rtb_Texto.Name = "rtb_Texto";
             this.rtb_Texto.Size = new System.Drawing.Size(601, 489);
             this.rtb_Texto.TabIndex = 1;
@@ -161,11 +164,12 @@
             this.Lexema,
             this.Linea});
             this.dgv_Lexico.Location = new System.Drawing.Point(627, 76);
-            this.dgv_Lexico.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgv_Lexico.Margin = new System.Windows.Forms.Padding(4);
             this.dgv_Lexico.Name = "dgv_Lexico";
             this.dgv_Lexico.RowHeadersWidth = 51;
             this.dgv_Lexico.Size = new System.Drawing.Size(486, 328);
             this.dgv_Lexico.TabIndex = 2;
+            this.dgv_Lexico.Visible = false;
             // 
             // Token
             // 
@@ -204,7 +208,7 @@
             this.Descripcion,
             this.errorLinea});
             this.dgv_Sintactico.Location = new System.Drawing.Point(631, 447);
-            this.dgv_Sintactico.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgv_Sintactico.Margin = new System.Windows.Forms.Padding(4);
             this.dgv_Sintactico.Name = "dgv_Sintactico";
             this.dgv_Sintactico.RowHeadersWidth = 51;
             this.dgv_Sintactico.Size = new System.Drawing.Size(591, 182);
@@ -241,9 +245,9 @@
             this.lbl_Lexico.Location = new System.Drawing.Point(627, 47);
             this.lbl_Lexico.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_Lexico.Name = "lbl_Lexico";
-            this.lbl_Lexico.Size = new System.Drawing.Size(69, 25);
+            this.lbl_Lexico.Size = new System.Drawing.Size(111, 25);
             this.lbl_Lexico.TabIndex = 4;
-            this.lbl_Lexico.Text = "Lexico";
+            this.lbl_Lexico.Text = "TS CLASE";
             // 
             // lbl_Sintactico
             // 
@@ -252,9 +256,10 @@
             this.lbl_Sintactico.Location = new System.Drawing.Point(627, 421);
             this.lbl_Sintactico.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_Sintactico.Name = "lbl_Sintactico";
-            this.lbl_Sintactico.Size = new System.Drawing.Size(175, 25);
+            this.lbl_Sintactico.Size = new System.Drawing.Size(75, 25);
             this.lbl_Sintactico.TabIndex = 5;
-            this.lbl_Sintactico.Text = "Errores Sintacticos";
+            this.lbl_Sintactico.Text = "Errores";
+            this.lbl_Sintactico.Click += new System.EventHandler(this.lbl_Sintactico_Click);
             // 
             // lbl_Resultado
             // 
@@ -270,30 +275,54 @@
             // 
             this.dgv_PreTabSim.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_PreTabSim.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2});
-            this.dgv_PreTabSim.Location = new System.Drawing.Point(1150, 76);
+            this.LexemaC,
+            this.Herencia,
+            this.RenglonDeDeclaracion,
+            this.TSA,
+            this.TSM});
+            this.dgv_PreTabSim.Location = new System.Drawing.Point(625, 76);
             this.dgv_PreTabSim.Margin = new System.Windows.Forms.Padding(4);
             this.dgv_PreTabSim.Name = "dgv_PreTabSim";
             this.dgv_PreTabSim.RowHeadersWidth = 51;
-            this.dgv_PreTabSim.Size = new System.Drawing.Size(386, 245);
+            this.dgv_PreTabSim.Size = new System.Drawing.Size(911, 328);
             this.dgv_PreTabSim.TabIndex = 7;
+            this.dgv_PreTabSim.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_PreTabSim_CellContentClick);
             // 
-            // dataGridViewTextBoxColumn1
+            // LexemaC
             // 
-            this.dataGridViewTextBoxColumn1.HeaderText = "Indice";
-            this.dataGridViewTextBoxColumn1.MinimumWidth = 6;
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            this.dataGridViewTextBoxColumn1.Width = 50;
+            this.LexemaC.HeaderText = "LexemaC";
+            this.LexemaC.MinimumWidth = 6;
+            this.LexemaC.Name = "LexemaC";
+            this.LexemaC.Width = 125;
             // 
-            // dataGridViewTextBoxColumn2
+            // Herencia
             // 
-            this.dataGridViewTextBoxColumn2.HeaderText = "Simbolos";
-            this.dataGridViewTextBoxColumn2.MinimumWidth = 200;
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.ReadOnly = true;
-            this.dataGridViewTextBoxColumn2.Width = 200;
+            this.Herencia.HeaderText = "Herencia";
+            this.Herencia.MinimumWidth = 6;
+            this.Herencia.Name = "Herencia";
+            this.Herencia.Width = 125;
+            // 
+            // RenglonDeDeclaracion
+            // 
+            this.RenglonDeDeclaracion.HeaderText = "RenglonDeDeclaracion";
+            this.RenglonDeDeclaracion.MinimumWidth = 6;
+            this.RenglonDeDeclaracion.Name = "RenglonDeDeclaracion";
+            this.RenglonDeDeclaracion.ReadOnly = true;
+            this.RenglonDeDeclaracion.Width = 125;
+            // 
+            // TSA
+            // 
+            this.TSA.HeaderText = "TSA";
+            this.TSA.MinimumWidth = 6;
+            this.TSA.Name = "TSA";
+            this.TSA.Width = 125;
+            // 
+            // TSM
+            // 
+            this.TSM.HeaderText = "TSM";
+            this.TSM.MinimumWidth = 6;
+            this.TSM.Name = "TSM";
+            this.TSM.Width = 125;
             // 
             // Form1
             // 
@@ -309,7 +338,7 @@
             this.Controls.Add(this.rtb_Texto);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -349,8 +378,11 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn Descripcion;
 		private System.Windows.Forms.DataGridViewTextBoxColumn errorLinea;
         private System.Windows.Forms.DataGridView dgv_PreTabSim;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LexemaC;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Herencia;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RenglonDeDeclaracion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TSA;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TSM;
     }
 }
 

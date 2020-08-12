@@ -87,9 +87,30 @@ namespace Compi
 				dgv_Sintactico.Rows.Add(item.tipo, item.Descripcion, item.linea.ToString());
 			}
             Sintactico.ErroresSintacticos = new List<Error>();
+
+			var listaClases = (from item in Sintactico.ts.tablaSimbolosClase select item.Value).ToList();
+			string herencia = string.Empty;
+			foreach(var item in listaClases)
+            {
+				if(item.Herencia != null)
+                {
+					herencia = item.Herencia.LexemaC;
+				}
+				dgv_PreTabSim.Rows.Add(item.LexemaC, herencia, item.RenglonDeDeclaracion);
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbl_Sintactico_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dgv_PreTabSim_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }

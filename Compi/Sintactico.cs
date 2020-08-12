@@ -369,7 +369,7 @@ namespace Compi
 				{
 					nuevaClase = new NodoClase();							//Crea el nodo para la clase
 					nuevaClase.RenglonDeDeclaracion = ListaToken[i].linea;	//Pasar la linea de declaracion de la clase
-					nuevaClase.Lexema = ListaToken[i + 1].lexema;           //Pasar el lexema de la clase al nodo
+					nuevaClase.LexemaC = ListaToken[i + 1].lexema;           //Pasar el lexema de la clase al nodo
 					claseActiva = ListaToken[i + 1].lexema;                 //Guardar el lexeman de la clase activa
 
 					//Herencia
@@ -414,7 +414,7 @@ namespace Compi
 					{
 						//Error Semantico clase actual duplicada
 						HuboErrores = true;
-						retorno = "Clase " + nuevaClase.Lexema + " duplicada";
+						retorno = "Clase " + nuevaClase.LexemaC + " duplicada";
 						ErroresSintacticos.Add(new Error(retorno, nuevaClase.RenglonDeDeclaracion, "-501", "Semantico"));
 						//retunr flase
 					}
@@ -797,7 +797,7 @@ namespace Compi
 		{
 			foreach (var clase in listaClases)
 			{
-				if (clase.Lexema == lexema)
+				if (clase.LexemaC == lexema)
 				{
 					return clase;
 				}
