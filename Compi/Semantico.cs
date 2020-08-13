@@ -511,6 +511,7 @@ namespace Compi
 		private TipoDato miTipo;
 		private string valor;
 		private string memoria;
+		private int renglonDeclaracion;
 
 		#region Encapsulamiento NodoAtributo
 		public string Lexema
@@ -573,6 +574,18 @@ namespace Compi
 				memoria = value;
 			}
 		}
+		public int RenglonDeclaracion
+		{
+			get
+			{
+				return renglonDeclaracion;
+			}
+
+			set
+			{
+				renglonDeclaracion = value;
+			}
+		}
 		#endregion
 
 
@@ -582,6 +595,7 @@ namespace Compi
 		private string lexema;
 		private Alcance miAlcance;
 		private Regreso miRegreso;
+		private int renglonDeclaracion;
 
 		#region Encapsulamiento NodoMetodo
 		public string Lexema
@@ -618,6 +632,18 @@ namespace Compi
 			set
 			{
 				miRegreso = value;
+			}
+		}
+		public int RenglonDeclaracion
+		{
+			get
+			{
+				return renglonDeclaracion;
+			}
+
+			set
+			{
+				renglonDeclaracion = value;
 			}
 		}
 

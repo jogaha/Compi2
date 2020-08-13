@@ -430,6 +430,7 @@ namespace Compi
 						{
 							NodoAtributo nuevoAtributo = new NodoAtributo();
 							nuevoAtributo.Lexema = ListaToken[i].lexema;
+							nuevoAtributo.RenglonDeclaracion = ListaToken[i].linea;
 							if (ListaToken[i - 1].lexema == ",")
 							{
 								nuevoAtributo.MiTipo = this.conversionLexemaTipo(tipoTemporal);
@@ -537,6 +538,7 @@ namespace Compi
 
 									nombreMetodo = ListaToken[iTemporal - 1].lexema;
 									nuevoMetodo.Lexema = ListaToken[iTemporal - 1].lexema;
+									nuevoMetodo.RenglonDeclaracion = ListaToken[iTemporal - 1].linea;
 									metodoActivo = ListaToken[iTemporal - 1].lexema;
 									nuevoMetodo.MiRegreso = conversionLexemaRegreso(ListaToken[iTemporal - 2].lexema);
 

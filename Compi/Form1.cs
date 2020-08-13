@@ -75,7 +75,8 @@ namespace Compi
 
 		private void ejecutar_sintactico_tsmi_click(object sender, EventArgs e)
 		{
-			
+			Sintactico.ts.tablaSimbolosClase.Clear();
+			dgv_PreTabSim.Rows.Clear();
 			ejecutar_lexico_tsmi_click(this, e);
 			lbl_Resultado.Visible = true;
 			string[] Resultado = Sintactico.Ejecutar(ListaTokens.Where(d=>d.estado>-400).ToList());
@@ -104,15 +105,46 @@ namespace Compi
         {
 
         }
+		private void dgv_PreTabSim_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+		{
+			string celdaSeleccionada;
+			celdaSeleccionada = dgv_PreTabSim.CurrentCell.Value.ToString();
 
-        private void lbl_Sintactico_Click(object sender, EventArgs e)
-        {
+			var listaClases2 = (from x in Sintactico.ts.tablaSimbolosClase where x.Key.ToString().Equals(celdaSeleccionada) select x.Value).FirstOrDefault();
 
-        }
+			var listaAtributos = listaClases2.TSA.Values;
+			var listaMetodos = listaClases2.TSM.Values;
 
-        private void dgv_PreTabSim_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
+			
+			dgv_PreTabSim.Visible = false;
+			dgv_TSA.Visible = true;
+			dgv_TSM.Visible = true;
+			lbl_Lexico.Visible = false;
+			lbl_TSA.Visible = true;
+			lbl_TSM.Visible = true;
+			dgv_TSA.Width = 528;
+			dgv_TSA.Height = 266;
+			dgv_TSM.Size = new Size(528,266);
+			dgv_TSA.Location = new Point(470,62);
+			lbl_TSA.Location = new Point(470, 38);
+			dgv_TSM.Location = new Point(1052,62);
+			lbl_TSM.Location = new Point(1052, 38);
 
-        }
-    }
+			foreach (var item in listaAtributos)
+			{
+				dgv_TSA.Rows.Add(item.MiTipo, item.MiAlcance, item.Lexema, item.Valor, item.RenglonDeclaracion);
+			}
+
+			foreach (var item in listaMetodos)
+			{
+				dgv_TSM.Rows.Add(item.MiRegreso, item.MiAlcance, item.Lexema, item.RenglonDeclaracion);
+			}
+		}
+
+		private void dgv_TSM_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+		{
+			string celdaSeleccionada;
+			celdaSeleccionada = dgv_TSM.CurrentCell.Value.ToString();
+		}
+	}
 }
