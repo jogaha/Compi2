@@ -657,6 +657,7 @@ namespace Compi
 		private string lexema;
 		private TipoDato miTipo;
 		private string valor;
+		private int linea;
 
 		#region Encapsulamiento NodoVariables
 		
@@ -713,7 +714,19 @@ namespace Compi
 			}
 
 
-		}		
+		}
+		public int Linea
+		{
+			get
+			{
+				return linea;
+			}
+
+			set
+			{
+				linea = value;
+			}
+		}
 		#endregion
 	}
 

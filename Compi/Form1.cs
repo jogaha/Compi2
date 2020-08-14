@@ -16,6 +16,9 @@ namespace Compi
 		Lexico Lexico = new Lexico();
 		Sintactico Sintactico = new Sintactico();
 		List<Token> ListaTokens = new List<Token>();
+		string claseSeleccionada;
+		string metodoSeleccionado;
+		int bandera;
 		public Form1()
 		{
 			InitializeComponent();
@@ -107,10 +110,12 @@ namespace Compi
         }
 		private void dgv_PreTabSim_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
-			string celdaSeleccionada;
-			celdaSeleccionada = dgv_PreTabSim.CurrentCell.Value.ToString();
+			bandera = 0;
+			dgv_TSA.Rows.Clear();
+			dgv_TSM.Rows.Clear();
+			claseSeleccionada = dgv_PreTabSim.CurrentCell.Value.ToString();
 
-			var listaClases2 = (from x in Sintactico.ts.tablaSimbolosClase where x.Key.ToString().Equals(celdaSeleccionada) select x.Value).FirstOrDefault();
+			var listaClases2 = (from x in Sintactico.ts.tablaSimbolosClase where x.Key.ToString().Equals(claseSeleccionada) select x.Value).FirstOrDefault();
 
 			var listaAtributos = listaClases2.TSA.Values;
 			var listaMetodos = listaClases2.TSM.Values;
@@ -141,10 +146,58 @@ namespace Compi
 			}
 		}
 
-		private void dgv_TSM_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+
+		private void dgv_TSM_CellContentDoubleClick_1(object sender, DataGridViewCellEventArgs e)
 		{
-			string celdaSeleccionada;
-			celdaSeleccionada = dgv_TSM.CurrentCell.Value.ToString();
+			bandera = 1;
+			dgv_TSV.Rows.Clear();
+			metodoSeleccionado = dgv_TSM.CurrentCell.Value.ToString();
+
+			var listaClases2 = (from x in Sintactico.tablaFinal.tablaSimbolosClase where x.Key.ToString().Equals(claseSeleccionada) select x.Value).FirstOrDefault();
+
+			var listaMetodos = listaClases2.TSM;
+
+			var listaMetodos2 = (from x in listaMetodos where x.Key.ToString().Equals(metodoSeleccionado) select x.Value).FirstOrDefault();
+
+			var listaVariables = listaMetodos2.TSV.Values;
+
+			dgv_TSA.Visible = false;
+			dgv_TSM.Visible = false;
+			lbl_TSA.Visible = false;
+			lbl_TSM.Visible = false;
+			lbl_TSV.Visible = true;
+			lbl_TSV.Location = new Point(470, 38);
+			dgv_TSV.Visible = true;
+			dgv_TSV.Location = new Point(470, 62);
+			dgv_TSV.Size = new Size(528, 266);
+
+			foreach (var item in listaVariables)
+			{
+				dgv_TSV.Rows.Add(item.MiTipo, item.MiAlcance, item.Lexema, item.Valor, item.Linea);
+			}
+		}
+
+		private void btn_Regresar_Click(object sender, EventArgs e)
+		{
+			if (bandera == 0)
+			{
+				dgv_PreTabSim.Visible = true;
+				dgv_TSA.Visible = false;
+				dgv_TSM.Visible = false;
+				lbl_Lexico.Visible = true;
+				lbl_TSA.Visible = false;
+				lbl_TSM.Visible = false;
+			}
+			else if (bandera == 1)
+			{
+				dgv_TSV.Visible = false;
+				dgv_TSA.Visible = true;
+				dgv_TSM.Visible = true;
+				lbl_TSV.Visible = false;
+				lbl_TSA.Visible = true;
+				lbl_TSM.Visible = true;
+				bandera = 0;
+			}
 		}
 	}
 }

@@ -46,32 +46,37 @@
 			this.Lexema = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Linea = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgv_Sintactico = new System.Windows.Forms.DataGridView();
+			this.Error = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Descripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.errorLinea = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.lbl_Lexico = new System.Windows.Forms.Label();
 			this.lbl_Sintactico = new System.Windows.Forms.Label();
 			this.lbl_Resultado = new System.Windows.Forms.Label();
 			this.dgv_PreTabSim = new System.Windows.Forms.DataGridView();
+			this.LexemaC = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Herencia = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.RenglonDeDeclaracion = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgv_TSA = new System.Windows.Forms.DataGridView();
-			this.dgv_TSM = new System.Windows.Forms.DataGridView();
-			this.Error = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Descripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.errorLinea = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.dgv_TSV = new System.Windows.Forms.DataGridView();
-			this.lbl_TSA = new System.Windows.Forms.Label();
-			this.lbl_TSM = new System.Windows.Forms.Label();
-			this.lbl_TSV = new System.Windows.Forms.Label();
 			this.Tipo = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Alcance = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.LexemaA = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Valor = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.RenglonDeDeclaracionA = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgv_TSM = new System.Windows.Forms.DataGridView();
 			this.Regreso = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.AlcanceM = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.LexemaM = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.RenglonDeDeclaracionM = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.LexemaC = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Herencia = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.RenglonDeDeclaracion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgv_TSV = new System.Windows.Forms.DataGridView();
+			this.lbl_TSA = new System.Windows.Forms.Label();
+			this.lbl_TSM = new System.Windows.Forms.Label();
+			this.lbl_TSV = new System.Windows.Forms.Label();
 			this.btn_Regresar = new System.Windows.Forms.Button();
+			this.TipoV = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.AlcanceV = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.LexemaV = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.ValorV = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.LineaV = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dgv_Lexico)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgv_Sintactico)).BeginInit();
@@ -153,7 +158,7 @@
 			// ejecutarToolStripMenuItem1
 			// 
 			this.ejecutarToolStripMenuItem1.Name = "ejecutarToolStripMenuItem1";
-			this.ejecutarToolStripMenuItem1.Size = new System.Drawing.Size(180, 24);
+			this.ejecutarToolStripMenuItem1.Size = new System.Drawing.Size(137, 24);
 			this.ejecutarToolStripMenuItem1.Text = "Ejecutar";
 			this.ejecutarToolStripMenuItem1.Click += new System.EventHandler(this.ejecutar_sintactico_tsmi_click);
 			// 
@@ -230,6 +235,30 @@
 			this.dgv_Sintactico.Size = new System.Drawing.Size(453, 148);
 			this.dgv_Sintactico.TabIndex = 3;
 			// 
+			// Error
+			// 
+			this.Error.HeaderText = "Error";
+			this.Error.MinimumWidth = 6;
+			this.Error.Name = "Error";
+			this.Error.ReadOnly = true;
+			this.Error.Width = 50;
+			// 
+			// Descripcion
+			// 
+			this.Descripcion.HeaderText = "Descripcion";
+			this.Descripcion.MinimumWidth = 200;
+			this.Descripcion.Name = "Descripcion";
+			this.Descripcion.ReadOnly = true;
+			this.Descripcion.Width = 300;
+			// 
+			// errorLinea
+			// 
+			this.errorLinea.HeaderText = "Linea";
+			this.errorLinea.MinimumWidth = 6;
+			this.errorLinea.Name = "errorLinea";
+			this.errorLinea.ReadOnly = true;
+			this.errorLinea.Width = 50;
+			// 
 			// lbl_Lexico
 			// 
 			this.lbl_Lexico.AutoSize = true;
@@ -273,6 +302,28 @@
 			this.dgv_PreTabSim.TabIndex = 7;
 			this.dgv_PreTabSim.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_PreTabSim_CellContentDoubleClick);
 			// 
+			// LexemaC
+			// 
+			this.LexemaC.HeaderText = "LexemaC";
+			this.LexemaC.MinimumWidth = 6;
+			this.LexemaC.Name = "LexemaC";
+			this.LexemaC.Width = 125;
+			// 
+			// Herencia
+			// 
+			this.Herencia.HeaderText = "Herencia";
+			this.Herencia.MinimumWidth = 6;
+			this.Herencia.Name = "Herencia";
+			this.Herencia.Width = 125;
+			// 
+			// RenglonDeDeclaracion
+			// 
+			this.RenglonDeDeclaracion.HeaderText = "RenglonDeDeclaracion";
+			this.RenglonDeDeclaracion.MinimumWidth = 6;
+			this.RenglonDeDeclaracion.Name = "RenglonDeDeclaracion";
+			this.RenglonDeDeclaracion.ReadOnly = true;
+			this.RenglonDeDeclaracion.Width = 125;
+			// 
 			// dgv_TSA
 			// 
 			this.dgv_TSA.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -288,6 +339,31 @@
 			this.dgv_TSA.TabIndex = 8;
 			this.dgv_TSA.Visible = false;
 			// 
+			// Tipo
+			// 
+			this.Tipo.HeaderText = "Tipo";
+			this.Tipo.Name = "Tipo";
+			// 
+			// Alcance
+			// 
+			this.Alcance.HeaderText = "Alcance";
+			this.Alcance.Name = "Alcance";
+			// 
+			// LexemaA
+			// 
+			this.LexemaA.HeaderText = "LexemaA";
+			this.LexemaA.Name = "LexemaA";
+			// 
+			// Valor
+			// 
+			this.Valor.HeaderText = "Valor";
+			this.Valor.Name = "Valor";
+			// 
+			// RenglonDeDeclaracionA
+			// 
+			this.RenglonDeDeclaracionA.HeaderText = "RenglonDeDeclaracionA";
+			this.RenglonDeDeclaracionA.Name = "RenglonDeDeclaracionA";
+			// 
 			// dgv_TSM
 			// 
 			this.dgv_TSM.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -301,35 +377,37 @@
 			this.dgv_TSM.Size = new System.Drawing.Size(96, 77);
 			this.dgv_TSM.TabIndex = 9;
 			this.dgv_TSM.Visible = false;
-			this.dgv_TSM.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_TSM_CellContentDoubleClick);
+			this.dgv_TSM.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_TSM_CellContentDoubleClick_1);
 			// 
-			// Error
+			// Regreso
 			// 
-			this.Error.HeaderText = "Error";
-			this.Error.MinimumWidth = 6;
-			this.Error.Name = "Error";
-			this.Error.ReadOnly = true;
-			this.Error.Width = 50;
+			this.Regreso.HeaderText = "Regreso";
+			this.Regreso.Name = "Regreso";
 			// 
-			// Descripcion
+			// AlcanceM
 			// 
-			this.Descripcion.HeaderText = "Descripcion";
-			this.Descripcion.MinimumWidth = 200;
-			this.Descripcion.Name = "Descripcion";
-			this.Descripcion.ReadOnly = true;
-			this.Descripcion.Width = 300;
+			this.AlcanceM.HeaderText = "AlcanceM";
+			this.AlcanceM.Name = "AlcanceM";
 			// 
-			// errorLinea
+			// LexemaM
 			// 
-			this.errorLinea.HeaderText = "Linea";
-			this.errorLinea.MinimumWidth = 6;
-			this.errorLinea.Name = "errorLinea";
-			this.errorLinea.ReadOnly = true;
-			this.errorLinea.Width = 50;
+			this.LexemaM.HeaderText = "LexemaM";
+			this.LexemaM.Name = "LexemaM";
+			// 
+			// RenglonDeDeclaracionM
+			// 
+			this.RenglonDeDeclaracionM.HeaderText = "RenglonDeDeclaracionM";
+			this.RenglonDeDeclaracionM.Name = "RenglonDeDeclaracionM";
 			// 
 			// dgv_TSV
 			// 
 			this.dgv_TSV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dgv_TSV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.TipoV,
+            this.AlcanceV,
+            this.LexemaV,
+            this.ValorV,
+            this.LineaV});
 			this.dgv_TSV.Location = new System.Drawing.Point(1279, 363);
 			this.dgv_TSV.Name = "dgv_TSV";
 			this.dgv_TSV.Size = new System.Drawing.Size(96, 77);
@@ -369,73 +447,6 @@
 			this.lbl_TSV.Text = "TS VARIABLES";
 			this.lbl_TSV.Visible = false;
 			// 
-			// Tipo
-			// 
-			this.Tipo.HeaderText = "Tipo";
-			this.Tipo.Name = "Tipo";
-			// 
-			// Alcance
-			// 
-			this.Alcance.HeaderText = "Alcance";
-			this.Alcance.Name = "Alcance";
-			// 
-			// LexemaA
-			// 
-			this.LexemaA.HeaderText = "LexemaA";
-			this.LexemaA.Name = "LexemaA";
-			// 
-			// Valor
-			// 
-			this.Valor.HeaderText = "Valor";
-			this.Valor.Name = "Valor";
-			// 
-			// RenglonDeDeclaracionA
-			// 
-			this.RenglonDeDeclaracionA.HeaderText = "RenglonDeDeclaracionA";
-			this.RenglonDeDeclaracionA.Name = "RenglonDeDeclaracionA";
-			// 
-			// Regreso
-			// 
-			this.Regreso.HeaderText = "Regreso";
-			this.Regreso.Name = "Regreso";
-			// 
-			// AlcanceM
-			// 
-			this.AlcanceM.HeaderText = "AlcanceM";
-			this.AlcanceM.Name = "AlcanceM";
-			// 
-			// LexemaM
-			// 
-			this.LexemaM.HeaderText = "LexemaM";
-			this.LexemaM.Name = "LexemaM";
-			// 
-			// RenglonDeDeclaracionM
-			// 
-			this.RenglonDeDeclaracionM.HeaderText = "RenglonDeDeclaracionM";
-			this.RenglonDeDeclaracionM.Name = "RenglonDeDeclaracionM";
-			// 
-			// LexemaC
-			// 
-			this.LexemaC.HeaderText = "LexemaC";
-			this.LexemaC.MinimumWidth = 6;
-			this.LexemaC.Name = "LexemaC";
-			this.LexemaC.Width = 125;
-			// 
-			// Herencia
-			// 
-			this.Herencia.HeaderText = "Herencia";
-			this.Herencia.MinimumWidth = 6;
-			this.Herencia.Name = "Herencia";
-			this.Herencia.Width = 125;
-			// 
-			// RenglonDeDeclaracion
-			// 
-			this.RenglonDeDeclaracion.HeaderText = "RenglonDeDeclaracion";
-			this.RenglonDeDeclaracion.MinimumWidth = 6;
-			this.RenglonDeDeclaracion.Name = "RenglonDeDeclaracion";
-			this.RenglonDeDeclaracion.ReadOnly = true;
-			this.RenglonDeDeclaracion.Width = 125;
-			// 
 			// btn_Regresar
 			// 
 			this.btn_Regresar.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_Regresar.BackgroundImage")));
@@ -445,6 +456,32 @@
 			this.btn_Regresar.Size = new System.Drawing.Size(30, 27);
 			this.btn_Regresar.TabIndex = 14;
 			this.btn_Regresar.UseVisualStyleBackColor = true;
+			this.btn_Regresar.Click += new System.EventHandler(this.btn_Regresar_Click);
+			// 
+			// TipoV
+			// 
+			this.TipoV.HeaderText = "TipoV";
+			this.TipoV.Name = "TipoV";
+			// 
+			// AlcanceV
+			// 
+			this.AlcanceV.HeaderText = "AlcanceV";
+			this.AlcanceV.Name = "AlcanceV";
+			// 
+			// LexemaV
+			// 
+			this.LexemaV.HeaderText = "LexemaV";
+			this.LexemaV.Name = "LexemaV";
+			// 
+			// ValorV
+			// 
+			this.ValorV.HeaderText = "ValorV";
+			this.ValorV.Name = "ValorV";
+			// 
+			// LineaV
+			// 
+			this.LineaV.HeaderText = "LineaV";
+			this.LineaV.Name = "LineaV";
 			// 
 			// Form1
 			// 
@@ -528,6 +565,11 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn Herencia;
 		private System.Windows.Forms.DataGridViewTextBoxColumn RenglonDeDeclaracion;
 		private System.Windows.Forms.Button btn_Regresar;
+		private System.Windows.Forms.DataGridViewTextBoxColumn TipoV;
+		private System.Windows.Forms.DataGridViewTextBoxColumn AlcanceV;
+		private System.Windows.Forms.DataGridViewTextBoxColumn LexemaV;
+		private System.Windows.Forms.DataGridViewTextBoxColumn ValorV;
+		private System.Windows.Forms.DataGridViewTextBoxColumn LineaV;
 	}
 }
 

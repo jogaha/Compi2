@@ -562,6 +562,7 @@ namespace Compi
 										nuevaVariable.MiTipo = conversionLexemaTipo(ListaToken[i].lexema);
 										i += 1;
 										nuevaVariable.Lexema = ListaToken[i].lexema;
+										nuevaVariable.Linea = ListaToken[i].linea;
 										nuevaVariable.MiAlcance = Alcance.Private;
 										listaVariables.Add(nuevaVariable);
 										if (ListaToken[i + 1].lexema == ",")
@@ -612,6 +613,7 @@ namespace Compi
 								{
 									NodoVariables nuevaVariable = new NodoVariables();
 									nuevaVariable.Lexema = ListaToken[i].lexema;
+									nuevaVariable.Linea = ListaToken[i].linea;
 									if (ListaToken[i - 1].lexema == ",")
 									{
 										nuevaVariable.MiTipo = conversionLexemaTipo(tipoTemporal);
