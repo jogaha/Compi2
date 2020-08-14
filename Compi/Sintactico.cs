@@ -368,6 +368,7 @@ namespace Compi
 				//cuando llega la clase
 				if (ListaToken[i].lexema == "class")
 				{
+					
 					nuevaClase = new NodoClase();							//Crea el nodo para la clase
 					nuevaClase.RenglonDeDeclaracion = ListaToken[i].linea;	//Pasar la linea de declaracion de la clase
 					nuevaClase.LexemaC = ListaToken[i + 1].lexema;           //Pasar el lexema de la clase al nodo
@@ -620,14 +621,14 @@ namespace Compi
 								{
 
 									NodoVariables nuevaVariable = new NodoVariables();
-									if (new[] { -107,-103,-120,-126,-160}.Contains(ListaToken[i - 1].estado))
+									if (new[] { -107, -103, -120, -126, -160 }.Contains(ListaToken[i - 1].estado))
 									{
 										nuevaVariable.Lexema = ListaToken[i].lexema;
 										nuevaVariable.Linea = ListaToken[i].linea;
 										nuevaVariable.MiTipo = conversionLexemaTipo(ListaToken[i - 1].lexema);
 										tipoTemporal = ListaToken[i - 1].lexema;
 										nuevaVariable.TipoVariable = TipoVariable.Primitive;
-										if (new[] { -134,-132,-133}.Contains(ListaToken[i - 3].estado))
+										if (new[] { -134, -132, -133 }.Contains(ListaToken[i - 3].estado))
 										{
 											nuevaVariable.MiAlcance = conversionLexemaAlcance(ListaToken[i - 3].lexema);
 											alcanceTemporal = ListaToken[i - 3].lexema;
@@ -640,10 +641,10 @@ namespace Compi
 										if (ListaToken[i + 1].lexema == "=")
 										{
 											string expresion = "";
-											List<Token> miListaDeValor = new List<Token>();
+											//List<Token> miListaDeValor = new List<Token>();
 
 											int iTemp = i + 2;
-											while (ListaToken[iTemp].lexema != ","  || ListaToken[iTemp].lexema != ";")
+											while (ListaToken[iTemp].lexema != ";")
 											{
 												if (ListaToken[iTemp].estado == -4)
 												{
@@ -675,6 +676,9 @@ namespace Compi
 												}
 												iTemp++;
 											}
+											nuevaVariable.Valor = expresion;
+											i = iTemp;
+											ts.buscarAtributo(nuevaClase, nuevaVariable.Lexema, expresion);
 
 
 											Estado estVariable = ts.InsertarNodoVariable(nuevaVariable, nuevaClase, nombreMetodo);
@@ -697,86 +701,161 @@ namespace Compi
 												break;
 											}
 										}
-									}
-
-									//pendiente para validacion de variables
-								 //   else if (ListaToken[i - 1].lexema == ",")
-									//{
-										
-									//}
-									//uso de variable en parametros o atributos
-									Boolean existeVariable = ts.ExisteNodoVariable(nuevaClase, nombreMetodo, ListaToken[i].lexema);
-									if (existeVariable)
-									{
-										if (ListaToken[i + 1].lexema == "=")
+										else if (ListaToken[i + 1].lexema == ";" || ListaToken[i + 1].lexema == ",")
 										{
-											string expresion = "";
-											int iTemp = i + 2;
-											while (ListaToken[iTemp].lexema != ";" || ListaToken[iTemp].lexema == ",")
+											Estado estVariable = ts.InsertarNodoVariable(nuevaVariable, nuevaClase, nombreMetodo);
+											if (estVariable == Estado.DuplicadoVariableMetodo)
 											{
-												if (ListaToken[iTemp].estado == -4)
-												{
-													Estado estadoAtributoAsignado = ts.verificarAtributoAsignacion(nuevaClase, ListaToken[iTemp].lexema);
-													if (estadoAtributoAsignado == Estado.Duplicado)
-													{
-														expresion += ListaToken[iTemp].lexema + " ";
-													}
-													else if (estadoAtributoAsignado == Estado.NoDeclarado)
-													{
-														Boolean existeVar = ts.ExisteNodoVariable(nuevaClase, nombreMetodo, ListaToken[i].lexema);
-														if (existeVar)
-														{
-															expresion += ListaToken[iTemp].lexema + " ";
-														}
-														else
-														{
-															HuboErrores = true;
-															retorno = "Atributo: '" + ListaToken[iTemp].lexema + "' no declarado";
-															//optimizar errores
-															ErroresSintacticos.Add(new Error(retorno, ListaToken[iTemp].linea, "-502", "Semantico"));
-															break;
-														}
-													}
-												}
-												else
-												{
-													expresion += ListaToken[iTemp].lexema + " ";
-												}
-												iTemp++;
+												//Error semantico variable duplicada en metodo "ListaToken[i].lexema" tomar la linea
+												HuboErrores = true;
+												retorno = "Variable " + nuevaVariable.Lexema + " duplicada en metodo";
+												ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-505", "Semantico"));
+												//return false;
+												break;
 											}
-											nuevaVariable.Valor = expresion;
-											i = iTemp + 1;
-											ts.buscarAtributo(nuevaClase, nuevaVariable.Lexema, expresion);
-
+											else if (estVariable == Estado.Duplicado)
+											{
+												//Error semantico variable duplicada "ListaToken[i].lexema" tomar la linea
+												HuboErrores = true;
+												retorno = "Variable: " + nuevaVariable.Lexema + " duplicada";
+												ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-506", "Semantico"));
+												//return false;
+												break;
+											}
+											else if (estVariable == Estado.DuplicadoVariableConAtributo)
+											{
+												HuboErrores = true;
+												retorno = "Variable " + nuevaVariable.Lexema + " duplicada en atributo";
+												ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-505", "Semantico"));
+												break;
+											}
 										}
 									}
+
 									else
-									{
-										//Error Semantico la variable ListaToken[i].Lexema no ha sido previamente definida. tomar la linea
-										HuboErrores = true;
-										retorno = "Variable " + ListaToken[i].lexema + " no ha sido previamente definida";
-										ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-508", "Semantico"));
-										//return false;
-										break;
-									}
-									if (ListaToken[i - 1].lexema == ",")
 									{
 										nuevaVariable.Lexema = ListaToken[i].lexema;
 										nuevaVariable.Linea = ListaToken[i].linea;
-										if (alcanceTemporal == "")
+										Boolean existeVariable = ts.ExisteNodoVariable(nuevaClase, nombreMetodo, ListaToken[i].lexema);
+										if (existeVariable)
 										{
-											nuevaVariable.MiAlcance = Alcance.Private;
+											if (ListaToken[i + 1].lexema == "=")
+											{
+												string expresion = "";
+												int iTemp = i + 2;
+												while (ListaToken[iTemp].lexema != ";" && ListaToken[iTemp].lexema != ",")
+												{
+													if (ListaToken[iTemp].estado == -4)
+													{
+														Estado estadoAtributoAsignado = ts.verificarAtributoAsignacion(nuevaClase, ListaToken[iTemp].lexema);
+														if (estadoAtributoAsignado == Estado.Duplicado)
+														{
+															expresion += ListaToken[iTemp].lexema + " ";
+														}
+														else if (estadoAtributoAsignado == Estado.NoDeclarado)
+														{
+															Boolean existeVar = ts.ExisteNodoVariable(nuevaClase, nombreMetodo, ListaToken[i].lexema);
+															if (existeVar)
+															{
+																expresion += ListaToken[iTemp].lexema + " ";
+															}
+															else
+															{
+																HuboErrores = true;
+																retorno = "Atributo: '" + ListaToken[iTemp].lexema + "' no declarado";
+																//optimizar errores
+																ErroresSintacticos.Add(new Error(retorno, ListaToken[iTemp].linea, "-502", "Semantico"));
+																break;
+															}
+														}
+													}
+													else
+													{
+														expresion += ListaToken[iTemp].lexema + " ";
+													}
+													iTemp++;
+												}
+												nuevaVariable.Valor = expresion;
+												i = iTemp;
+												ts.buscarAtributo(nuevaClase, nuevaVariable.Lexema, expresion);
+												ts.buscarParametro(nuevaClase, nuevaVariable.Lexema, expresion, nombreMetodo);
+
+
+											}
 										}
 										else
 										{
-											nuevaVariable.MiAlcance = conversionLexemaAlcance(alcanceTemporal);
-										}
-										if (true)
-										{
+											string expresion = "";
+											int iTemp = i + 2;
+											Estado estadoAtribAsignado = ts.verificarAtributoAsignacion(nuevaClase, ListaToken[i].lexema);
+											if (estadoAtribAsignado == Estado.Duplicado)
+											{
+
+												while (ListaToken[iTemp].lexema != ";" && ListaToken[iTemp].lexema != ",")
+												{
+													if (ListaToken[iTemp].estado == -4)
+													{
+														Estado estadoAtribAsig = ts.verificarAtributoAsignacion(nuevaClase, ListaToken[iTemp].lexema);
+														if (estadoAtribAsig == Estado.Duplicado)
+														{
+															expresion += ListaToken[iTemp].lexema + " ";
+														}
+														else if (estadoAtribAsig == Estado.NoDeclarado)
+														{
+															Boolean existeVar = ts.ExisteNodoVariable(nuevaClase, nombreMetodo, ListaToken[iTemp].lexema);
+															if (existeVar)
+															{
+																expresion += ListaToken[iTemp].lexema + " ";
+															}
+															else
+															{
+																HuboErrores = true;
+																retorno = "Atributo: '" + ListaToken[iTemp].lexema + "' no declarado";
+																//optimizar errores
+																ErroresSintacticos.Add(new Error(retorno, ListaToken[iTemp].linea, "-502", "Semantico"));
+																break;
+															}
+														}
+													}
+													else
+													{
+														expresion += ListaToken[iTemp].lexema + " ";
+													}
+													iTemp++;
+												}
+												nuevaVariable.Valor = expresion;
+												i = iTemp;
+												ts.buscarAtributo(nuevaClase, nuevaVariable.Lexema, expresion);
+											}
+											else if (estadoAtribAsignado == Estado.NoDeclarado)
+											{
+
+												HuboErrores = true;
+												retorno = "Atributo: '" + ListaToken[i].lexema + "' no declarado";
+												//optimizar errores
+												ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-502", "Semantico"));
+												break;
+												
+											}
+
 
 										}
-										nuevaVariable.MiTipo = conversionLexemaTipo(tipoTemporal);
-										
+										if (ListaToken[i - 1].lexema == ",")
+										{
+											nuevaVariable.Lexema = ListaToken[i].lexema;
+											nuevaVariable.Linea = ListaToken[i].linea;
+											if (alcanceTemporal == "")
+											{
+												nuevaVariable.MiAlcance = Alcance.Private;
+											}
+											else
+											{
+												nuevaVariable.MiAlcance = conversionLexemaAlcance(alcanceTemporal);
+											}
+											nuevaVariable.MiTipo = conversionLexemaTipo(tipoTemporal);
+											nuevaVariable.TipoVariable = TipoVariable.Primitive;
+
+										}
 									}
 									
 								}

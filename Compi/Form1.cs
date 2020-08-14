@@ -93,10 +93,11 @@ namespace Compi
             Sintactico.ErroresSintacticos = new List<Error>();
 
 			var listaClases = (from item in Sintactico.ts.tablaSimbolosClase select item.Value).ToList();
-			string herencia = string.Empty;
+			
 			foreach(var item in listaClases)
             {
-				if(item.Herencia != null)
+				string herencia = string.Empty;
+				if (item.Herencia != null)
                 {
 					herencia = item.Herencia.LexemaC;
 				}

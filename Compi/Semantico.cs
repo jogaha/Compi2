@@ -268,11 +268,19 @@ namespace Compi
 
 				if (!nodoMetodo.TSV.ContainsKey(nodo.Lexema))
 				{
+					if (nodoClaseActiva.TSA.ContainsKey(nodo.Lexema))
+					{
+						return Estado.DuplicadoVariableConAtributo;
+					}
+					else 
+					{ 
 					nodoMetodo.TSV.Add(nodo.Lexema, nodo);
 					return Estado.Insertado;
+					}
 				}
 				else
 				{
+					
 					//se manda el error para el atributo duplicado
 					return Estado.Duplicado;
 				}
@@ -437,6 +445,18 @@ namespace Compi
 				}
 			}
 			
+		}
+		public void buscarParametro(NodoClase nodoClaseActiva, string lexema, string expresion, string nombreMetodo)
+		{
+			List<NodoVariables> listaVariables = ObtenerParametrosMetodo(nombreMetodo, nodoClaseActiva, false);
+			foreach (var item in listaVariables)
+			{
+				if (item.Lexema == lexema)
+				{
+					item.Valor = expresion;
+				}
+				
+			}
 		}
 
 		#endregion
@@ -665,7 +685,7 @@ namespace Compi
 		private string valor;
 		private int linea;
 		private TipoVariable tipoVariable;
-		private List<Token> listaValor;
+		//private List<Token> listaValor;
 
 		#region Encapsulamiento NodoVariables
 		
@@ -747,18 +767,18 @@ namespace Compi
 				tipoVariable = value;
 			}
 		}
-		public List<Token> ListaValor
-		{
-			get
-			{
-				return ListaValor;
-			}
+		//public List<Token> ListaValor
+		//{
+		//	get
+		//	{
+		//		return ListaValor;
+		//	}
 
-			set
-			{
-				ListaValor = value;
-			}
-		}
+		//	set
+		//	{
+		//		ListaValor = value;
+		//	}
+		//}
 		#endregion
 	}
 
@@ -788,6 +808,7 @@ namespace Compi
 		DuplicadoVariableMetodo,
 		DuplicadoAtributoConClase,
 		DuplicadoMetodoConClase,
+		DuplicadoVariableConAtributo,
 		NoDeclarado
 	}
 	public enum Regreso
