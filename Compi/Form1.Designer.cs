@@ -68,15 +68,15 @@
 			this.LexemaM = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.RenglonDeDeclaracionM = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dgv_TSV = new System.Windows.Forms.DataGridView();
-			this.lbl_TSA = new System.Windows.Forms.Label();
-			this.lbl_TSM = new System.Windows.Forms.Label();
-			this.lbl_TSV = new System.Windows.Forms.Label();
-			this.btn_Regresar = new System.Windows.Forms.Button();
 			this.TipoV = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.AlcanceV = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.LexemaV = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.ValorV = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.LineaV = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.lbl_TSA = new System.Windows.Forms.Label();
+			this.lbl_TSM = new System.Windows.Forms.Label();
+			this.lbl_TSV = new System.Windows.Forms.Label();
+			this.btn_Regresar = new System.Windows.Forms.Button();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dgv_Lexico)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgv_Sintactico)).BeginInit();
@@ -191,7 +191,6 @@
 			this.dgv_Lexico.RowHeadersWidth = 51;
 			this.dgv_Lexico.Size = new System.Drawing.Size(364, 266);
 			this.dgv_Lexico.TabIndex = 2;
-			this.dgv_Lexico.Visible = false;
 			// 
 			// Token
 			// 
@@ -295,7 +294,7 @@
             this.LexemaC,
             this.Herencia,
             this.RenglonDeDeclaracion});
-			this.dgv_PreTabSim.Location = new System.Drawing.Point(469, 62);
+			this.dgv_PreTabSim.Location = new System.Drawing.Point(899, 62);
 			this.dgv_PreTabSim.Name = "dgv_PreTabSim";
 			this.dgv_PreTabSim.RowHeadersWidth = 51;
 			this.dgv_PreTabSim.Size = new System.Drawing.Size(431, 266);
@@ -414,6 +413,31 @@
 			this.dgv_TSV.TabIndex = 10;
 			this.dgv_TSV.Visible = false;
 			// 
+			// TipoV
+			// 
+			this.TipoV.HeaderText = "TipoV";
+			this.TipoV.Name = "TipoV";
+			// 
+			// AlcanceV
+			// 
+			this.AlcanceV.HeaderText = "AlcanceV";
+			this.AlcanceV.Name = "AlcanceV";
+			// 
+			// LexemaV
+			// 
+			this.LexemaV.HeaderText = "LexemaV";
+			this.LexemaV.Name = "LexemaV";
+			// 
+			// ValorV
+			// 
+			this.ValorV.HeaderText = "ValorV";
+			this.ValorV.Name = "ValorV";
+			// 
+			// LineaV
+			// 
+			this.LineaV.HeaderText = "LineaV";
+			this.LineaV.Name = "LineaV";
+			// 
 			// lbl_TSA
 			// 
 			this.lbl_TSA.AutoSize = true;
@@ -457,31 +481,6 @@
 			this.btn_Regresar.TabIndex = 14;
 			this.btn_Regresar.UseVisualStyleBackColor = true;
 			this.btn_Regresar.Click += new System.EventHandler(this.btn_Regresar_Click);
-			// 
-			// TipoV
-			// 
-			this.TipoV.HeaderText = "TipoV";
-			this.TipoV.Name = "TipoV";
-			// 
-			// AlcanceV
-			// 
-			this.AlcanceV.HeaderText = "AlcanceV";
-			this.AlcanceV.Name = "AlcanceV";
-			// 
-			// LexemaV
-			// 
-			this.LexemaV.HeaderText = "LexemaV";
-			this.LexemaV.Name = "LexemaV";
-			// 
-			// ValorV
-			// 
-			this.ValorV.HeaderText = "ValorV";
-			this.ValorV.Name = "ValorV";
-			// 
-			// LineaV
-			// 
-			this.LineaV.HeaderText = "LineaV";
-			this.LineaV.Name = "LineaV";
 			// 
 			// Form1
 			// 

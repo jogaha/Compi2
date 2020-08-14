@@ -185,7 +185,7 @@ namespace Compi
 			}
 			else
 			{
-				return Tuple.Create(Estado.DuplicadoMetodoConClase, nodo.Lexema);
+				return Tuple.Create(Estado.DuplicadoMetodoConClase, "");
 			}
 		}
 
@@ -206,9 +206,10 @@ namespace Compi
 			return listaMetodos;
 		}
 
-		public Estado verificarAtributoAsignacion(List<NodoAtributo> misAtributos, string lexema)
+		public Estado verificarAtributoAsignacion(NodoClase claseActiva, string lexema)
 		{
-			foreach (var item in misAtributos)
+			var atributos = claseActiva.TSA.Values;
+			foreach (var item in atributos)
 			{
 				if (item.Lexema == lexema)
 				{
@@ -231,12 +232,17 @@ namespace Compi
 					{
 						if (soloArgumentos)
 						{
-							listaV.Add(variable);
+							if (variable.TipoVariable == TipoVariable.Reference)
+							{
+								listaV.Add(variable);
+							}
+							
 						}
 						else
 						{
 							listaV.Add(variable);
 						}
+						
 					}
 					return listaV;
 				}
@@ -658,6 +664,8 @@ namespace Compi
 		private TipoDato miTipo;
 		private string valor;
 		private int linea;
+		private TipoVariable tipoVariable;
+		private List<Token> listaValor;
 
 		#region Encapsulamiento NodoVariables
 		
@@ -727,6 +735,30 @@ namespace Compi
 				linea = value;
 			}
 		}
+		public TipoVariable TipoVariable
+		{
+			get
+			{
+				return tipoVariable;
+			}
+
+			set
+			{
+				tipoVariable = value;
+			}
+		}
+		public List<Token> ListaValor
+		{
+			get
+			{
+				return ListaValor;
+			}
+
+			set
+			{
+				ListaValor = value;
+			}
+		}
 		#endregion
 	}
 
@@ -766,6 +798,11 @@ namespace Compi
 		String,
 		Char,
 		Bool
+	}
+	public enum TipoVariable
+	{
+		Reference,
+		Primitive
 	}
 
 	#endregion
