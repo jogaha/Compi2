@@ -220,6 +220,7 @@ namespace Compi
 		bool HuboErrores;
 		public TablaSimbolos ts = new TablaSimbolos();
 		public TablaSimbolos tablaFinal = new TablaSimbolos();
+		public Arboles programa = new Arboles();
 		public string claseActiva;
 		public string metodoActivo;
 		List<Token> ListaToken;
@@ -368,6 +369,8 @@ namespace Compi
 				//cuando llega la clase
 				if (ListaToken[i].lexema == "class")
 				{
+					Arboles arbolClase = new Arboles();
+					arbolClase.lexema = ListaToken[i + 1].lexema;
 					
 					nuevaClase = new NodoClase();							//Crea el nodo para la clase
 					nuevaClase.RenglonDeDeclaracion = ListaToken[i].linea;	//Pasar la linea de declaracion de la clase
@@ -515,10 +518,11 @@ namespace Compi
 								i = puntoYcoma;
 							}
 						}
-						
+
 
 						//Insertar metodo
 						//Entra con palabra reservda para el tipo del metodo
+						Arboles arbolMetodo = new Arboles();
 						if ((new[] { -103, -107, -120, -126, -160, -154 }.Contains(ListaToken[i].estado) && ListaToken[i + 1].estado == -4 && ListaToken[i + 2].lexema == "(") || (ListaToken[i].estado == -4 && ListaToken[i + 1].lexema == "(") )
 						{
 							string nombreMetodo = "";
@@ -641,8 +645,7 @@ namespace Compi
 										if (ListaToken[i + 1].lexema == "=")
 										{
 											string expresion = "";
-											//List<Token> miListaDeValor = new List<Token>();
-
+											int iTemp2 = i;
 											int iTemp = i + 2;
 											while (ListaToken[iTemp].lexema != ";")
 											{
@@ -701,7 +704,7 @@ namespace Compi
 												break;
 											}
 										}
-										else if (ListaToken[i + 1].lexema == ";" || ListaToken[i + 1].lexema == ",")
+										else if (ListaToken[i + 1].lexema == ";")
 										{
 											Estado estVariable = ts.InsertarNodoVariable(nuevaVariable, nuevaClase, nombreMetodo);
 											if (estVariable == Estado.DuplicadoVariableMetodo)
