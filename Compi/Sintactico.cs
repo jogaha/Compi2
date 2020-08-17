@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using static Compi.Lexico;
 using static Compi.TablaSimbolos;
 
@@ -543,6 +544,7 @@ namespace Compi
 										iTemporal--;
 									}
 									NodoMetodo nuevoMetodo = new NodoMetodo();
+									arbolMetodo.lexema = ListaToken[iTemporal - 1].lexema;
 
 									nombreMetodo = ListaToken[iTemporal - 1].lexema;
 									nuevoMetodo.Lexema = ListaToken[iTemporal - 1].lexema;
@@ -678,6 +680,18 @@ namespace Compi
 													expresion += ListaToken[iTemp].lexema + " ";
 												}
 												iTemp++;
+												iTemp2++;
+											}
+											List<Token> miListaTemporal = ListaToken.GetRange(i, iTemp2 - (i - 1));
+											Arboles arbolAtributo = new Arboles(miListaTemporal, ts, claseActiva, metodoActivo);
+											try
+											{
+												var resultado = VerificacionTipos(arbolAtributo);
+											}
+											catch (Exception ex)
+											{
+
+												MessageBox.Show(ex.Message);
 											}
 											nuevaVariable.Valor = expresion;
 											i = iTemp;
@@ -891,6 +905,8 @@ namespace Compi
 			return ts;
 		}
 
+		
+
 		private Regreso conversionLexemaRegreso(string lexema)
 		{
 			switch (lexema)
@@ -929,6 +945,7 @@ namespace Compi
 			}
 		}
 
+
 		public TipoDato conversionLexemaTipo(string lexema)
 		{
 			
@@ -954,6 +971,90 @@ namespace Compi
 			}
 			
 		}
+		public TipoValorNodo VerificacionTipos(Arboles miArbol)
+		{
+			if (miArbol.HijoIzquierdo != null)
+				miArbol.tipoValorHijoIzquierdo =
+					 VerificacionTipos(miArbol.HijoIzquierdo);
+
+			if (miArbol.HijoDerecho != null)
+				miArbol.tipoValorHijoDerecho =
+					VerificacionTipos(miArbol.HijoDerecho);
+
+			if (miArbol.soyExpresionTipo == TipoExpresion.Operador)
+			{
+				return FuncionEquivalencia(miArbol.tipoValorHijoIzquierdo,
+					 miArbol.tipoValorHijoDerecho, miArbol.soyOperacion);
+			}
+			else if (miArbol.soyExpresionTipo == TipoExpresion.Constante)
+			{
+				return miArbol.soyValorTipo;
+			}
+			else if (miArbol.soyExpresionTipo == TipoExpresion.Identificador)
+			{
+				return GetType(miArbol.lexema);
+			}
+			return TipoValorNodo.Nada;
+		}
+
+		private TipoValorNodo FuncionEquivalencia(
+	TipoValorNodo tipoValorHijoIzquierdo,
+	TipoValorNodo tipoValorHijoDerecho, Operaciones soyOperacion)
+		{
+			switch (soyOperacion)
+			{
+				case Operaciones.Suma:
+					if (tipoValorHijoIzquierdo == TipoValorNodo.Entero &&
+						 tipoValorHijoDerecho == TipoValorNodo.Entero)
+						return TipoValorNodo.Entero;
+					else if (tipoValorHijoIzquierdo == TipoValorNodo.Entero &&
+						 tipoValorHijoDerecho == TipoValorNodo.Flotante)
+						return TipoValorNodo.Flotante;
+					else if (tipoValorHijoIzquierdo == TipoValorNodo.Cadena &&
+						tipoValorHijoDerecho == TipoValorNodo.Cadena)
+						return TipoValorNodo.Flotante;
+					else
+						throw new Exception(string.Format("Error de tipos no se puede realizar la operacion {0} con {1} y {2}",
+							soyOperacion, tipoValorHijoIzquierdo, tipoValorHijoDerecho));
+				case Operaciones.Resta:
+					if (tipoValorHijoIzquierdo == TipoValorNodo.Entero &&
+						 tipoValorHijoDerecho == TipoValorNodo.Entero)
+						return TipoValorNodo.Entero;
+					else if (tipoValorHijoIzquierdo == TipoValorNodo.Entero &&
+						 tipoValorHijoDerecho == TipoValorNodo.Flotante)
+						return TipoValorNodo.Flotante;
+					else
+						throw new Exception(string.Format("Error de tipos no se puede realizar la operacion {0} con {1} y {2}",
+							soyOperacion, tipoValorHijoIzquierdo, tipoValorHijoDerecho));
+				case Operaciones.Division:
+					if (tipoValorHijoIzquierdo == TipoValorNodo.Entero &&
+						 tipoValorHijoDerecho == TipoValorNodo.Entero)
+						return TipoValorNodo.Entero;
+					else if (tipoValorHijoIzquierdo == TipoValorNodo.Entero &&
+						 tipoValorHijoDerecho == TipoValorNodo.Flotante)
+						return TipoValorNodo.Flotante;
+					else
+						throw new Exception(string.Format("Error de tipos no se puede realizar la operacion {0} con {1} y {2}",
+							soyOperacion, tipoValorHijoIzquierdo, tipoValorHijoDerecho));
+				case Operaciones.Multiplicacion:
+					if (tipoValorHijoIzquierdo == TipoValorNodo.Entero &&
+						 tipoValorHijoDerecho == TipoValorNodo.Entero)
+						return TipoValorNodo.Entero;
+					else if (tipoValorHijoIzquierdo == TipoValorNodo.Entero &&
+						 tipoValorHijoDerecho == TipoValorNodo.Flotante)
+						return TipoValorNodo.Flotante;
+					else
+						throw new Exception(string.Format("Error de tipos no se puede realizar la operacion {0} con {1} y {2}",
+							soyOperacion, tipoValorHijoIzquierdo, tipoValorHijoDerecho));
+
+
+
+			}
+			return TipoValorNodo.Nada;
+
+
+		}
+
 
 		public NodoClase encontrarClase(List<NodoClase> listaClases, string lexema)
 		{
