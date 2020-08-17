@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Compi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,12 @@ namespace Compi
 				return Estado.Duplicado;
 			}
 
+		}
+		public NodoClase ObtenerNodoClase(string lexema)
+		{
+				return tablaSimbolosClase
+					.SingleOrDefault(x => x.Key == lexema).Value;
+				
 		}
 		public bool ExisteClaseHeredada(string lexema)
 		{
@@ -204,6 +211,26 @@ namespace Compi
 				}
 			}
 			return listaMetodos;
+		}
+		public NodoVariables ObtenerNodoVariable(string nombreVariable, string nombreMetodo, NodoClase nodoClaseActiva)
+		{
+			var metodos = nodoClaseActiva.TSM.Values;
+			foreach (var metodo in metodos)
+			{
+				if (metodo.Lexema == nombreMetodo)
+				{
+					foreach (var variable in metodo.TSV.Values)
+					{
+						if (variable.Lexema == nombreVariable)
+						{
+							return variable;
+						}
+
+					}
+					return null;
+				}
+			}
+			return null;
 		}
 
 		public Estado verificarAtributoAsignacion(NodoClase claseActiva, string lexema)

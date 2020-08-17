@@ -78,6 +78,7 @@ namespace Compi
 
 		private void ejecutar_sintactico_tsmi_click(object sender, EventArgs e)
 		{
+			File.Delete(@"C:\Users\jogah\Desktop\Compi\Codigop.txt");
 			Sintactico.ts.tablaSimbolosClase.Clear();
 			dgv_PreTabSim.Rows.Clear();
 			ejecutar_lexico_tsmi_click(this, e);

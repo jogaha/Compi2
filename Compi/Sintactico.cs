@@ -223,9 +223,11 @@ namespace Compi
 		public TablaSimbolos tablaFinal = new TablaSimbolos();
 		public Arboles programa = new Arboles();
 		public string claseActiva;
+		public int claseActivaRenglon;
 		public string metodoActivo;
 		List<Token> ListaToken;
 		public List<int> ListaReglas;
+		List<string> codigoP = new List<string>();
 		List<int> MisReglas;
 		int Cola;
 		int Columna, Renglon;
@@ -236,6 +238,7 @@ namespace Compi
 		int filaActual;
 		public string[] Ejecutar(List<Token> ListaToken)
 		{
+			codigoP.Clear();
 			retorno = "";
 			HuboErrores = false;
 			Seguir = true;
@@ -377,7 +380,7 @@ namespace Compi
 					nuevaClase.RenglonDeDeclaracion = ListaToken[i].linea;	//Pasar la linea de declaracion de la clase
 					nuevaClase.LexemaC = ListaToken[i + 1].lexema;           //Pasar el lexema de la clase al nodo
 					claseActiva = ListaToken[i + 1].lexema;                 //Guardar el lexeman de la clase activa
-
+					claseActivaRenglon = ListaToken[i].linea;
 					//Herencia
 					if (ListaToken[i + 2].lexema == ":")
 					{
@@ -649,6 +652,13 @@ namespace Compi
 											string expresion = "";
 											int iTemp2 = i;
 											int iTemp = i + 2;
+											List<Token> miListaTemporal = new List<Token>();
+											while (ListaToken[iTemp2].lexema != ";")
+											{
+												miListaTemporal.Add(ListaToken[iTemp2]);
+												iTemp2++;
+											}
+											miListaTemporal.Add(ListaToken[iTemp2]);
 											while (ListaToken[iTemp].lexema != ";")
 											{
 												if (ListaToken[iTemp].estado == -4)
@@ -680,13 +690,17 @@ namespace Compi
 													expresion += ListaToken[iTemp].lexema + " ";
 												}
 												iTemp++;
-												iTemp2++;
 											}
-											List<Token> miListaTemporal = ListaToken.GetRange(i, iTemp2 - (i - 1));
+											
 											Arboles arbolAtributo = new Arboles(miListaTemporal, ts, claseActiva, metodoActivo);
+											arbolAtributo = arbolAtributo.SentenciaAsignacion(true);
 											try
 											{
 												var resultado = VerificacionTipos(arbolAtributo);
+												var codigop = ImpresionCodigoP(arbolAtributo);
+
+												//Insertar atributo en arbol metodo
+												insertarNodo(arbolMetodo, arbolAtributo);
 											}
 											catch (Exception ex)
 											{
@@ -723,6 +737,7 @@ namespace Compi
 											Estado estVariable = ts.InsertarNodoVariable(nuevaVariable, nuevaClase, nombreMetodo);
 											if (estVariable == Estado.DuplicadoVariableMetodo)
 											{
+
 												//Error semantico variable duplicada en metodo "ListaToken[i].lexema" tomar la linea
 												HuboErrores = true;
 												retorno = "Variable " + nuevaVariable.Lexema + " duplicada en metodo";
@@ -746,6 +761,10 @@ namespace Compi
 												ErroresSintacticos.Add(new Error(retorno, ListaToken[i].linea, "-505", "Semantico"));
 												break;
 											}
+											List<Token> miListaTemporal = ListaToken.GetRange(i - 1, 3);
+
+											Arboles arbolAtributo = new Arboles(miListaTemporal, ts, claseActiva, metodoActivo);
+											arbolAtributo = arbolAtributo.SentenciaAsignacion(true);
 										}
 									}
 
@@ -876,6 +895,47 @@ namespace Compi
 									}
 									
 								}
+								if (ListaToken[i].lexema == "cout")
+								{
+									int iTemp = i;
+									while (ListaToken[iTemp].lexema != "endl")
+									{
+										iTemp++;
+									}
+
+									List<Token> miListaTemporal = ListaToken.GetRange(i + 2, iTemp - (i + 1));
+									Arboles arbolWrite = new Arboles(miListaTemporal, ts, claseActiva, metodoActivo);
+									arbolWrite = arbolWrite.SentenciaWrite();
+									ImpresionCodigoP(arbolWrite);
+									arbolMetodo = insertarNodo(arbolMetodo, arbolWrite);
+								}
+								if (ListaToken[i].lexema == "if")
+								{
+									List<Token> miListaTemporal1 = ListaToken.GetRange(i, ListaToken.Count - i);
+									int tempIndex = ObtenerIndexIfFinal(ListaToken.GetRange(i, ListaToken.Count - i));
+
+									List<Token> miListaTemporal = miListaTemporal1.GetRange(0, tempIndex + 1);
+
+									Arboles arbolIf = new Arboles(miListaTemporal, ts, claseActiva, metodoActivo);
+									arbolIf = arbolIf.SentenciaIf();
+									ImpresionCodigoP(arbolIf);
+
+									arbolMetodo = insertarNodo(arbolMetodo, arbolIf);
+									//Mover el index hasta el final del if
+									i += tempIndex + 1;
+								}
+								if (ListaToken[i].lexema == "for")
+								{
+									List<Token> miListaTemporal1 = ListaToken.GetRange(i, ListaToken.Count - i);
+									int tempIndex = ObtenerIndexForFinal(ListaToken.GetRange(i, ListaToken.Count - i));
+
+									List<Token> miListaTemporal = miListaTemporal1.GetRange(0, tempIndex + 1);
+									Arboles arbolFor = new Arboles(miListaTemporal, ts, claseActiva, metodoActivo);
+									arbolFor = arbolFor.SenteciaFor();
+									ImpresionCodigoP(arbolFor);
+									arbolMetodo = insertarNodo(arbolMetodo, arbolFor);
+									i += tempIndex + 1;
+								}
 								if (ListaToken[i].lexema == "}")
 								{
 									terminacionMetodo = true;
@@ -901,11 +961,136 @@ namespace Compi
 
 
 			}
+			programa = programa;
 			ts = ts;
+			codigoP.Add("stp");
+			System.IO.File.WriteAllLines(@"C:\Users\jogah\Desktop\Compi\Codigop.txt", codigoP.ToArray().Where(x => !string.IsNullOrEmpty(x)).ToArray());
+			
 			return ts;
 		}
 
-		
+		public Arboles insertarNodo(Arboles padre, Arboles hijo)
+		{
+			if (padre.HijoIzquierdo == null)
+			{
+				padre.HijoIzquierdo = hijo;
+			}
+			else
+			{
+				Arboles q = padre.HijoIzquierdo;
+				if (q.Hermano == null)
+				{
+					q.Hermano = hijo;
+				}
+				else
+				{
+					bool insertado = false;
+					while (!insertado)
+					{
+						Arboles n = q.Hermano;
+
+						if (n.Hermano == null)
+						{
+							n.Hermano = hijo;
+							insertado = true;
+						}
+						q = n;
+					}
+				}
+			}
+			return padre;
+		}
+		public int ObtenerIndexIfFinal(List<Token> lista)
+		{
+			int curlyBraces = 0;
+			int index = 0;
+			while (lista[index].lexema != "{")
+			{
+				index++;
+			}
+			index++;
+			curlyBraces++;
+
+			for (; index < lista.Count; index++)
+			{
+				if (lista[index].lexema == "{")
+				{
+					curlyBraces++;
+				}
+				else if (lista[index].lexema == "}")
+				{
+					curlyBraces--;
+				}
+				if (curlyBraces == 0)
+				{
+					if (lista[index + 1].lexema == "else")
+					{
+						return ObtenerIndexElseFinal(lista, index + 1);
+					}
+					else
+					{
+						return index;
+					}
+				}
+			}
+			return -1;
+		}
+		public int ObtenerIndexElseFinal(List<Token> lista, int index)
+		{
+			int curlyBraces = 0;
+			while (lista[index].lexema != "{")
+			{
+				index++;
+			}
+			index++;
+			curlyBraces++;
+
+			for (; index < lista.Count; index++)
+			{
+				if (lista[index].lexema == "{")
+				{
+					curlyBraces++;
+				}
+				else if (lista[index].lexema == "}")
+				{
+					curlyBraces--;
+				}
+				if (curlyBraces == 0)
+				{
+					return index;
+				}
+			}
+
+			return -1;
+		}
+		public int ObtenerIndexForFinal(List<Token> lista)
+		{
+			int curlyBraces = 0;
+			int index = 0;
+			while (lista[index].lexema != "{")
+			{
+				index++;
+			}
+			index++;
+			curlyBraces++;
+
+			for (; index < lista.Count; index++)
+			{
+				if (lista[index].lexema == "{")
+				{
+					curlyBraces++;
+				}
+				else if (lista[index].lexema == "}")
+				{
+					curlyBraces--;
+				}
+				if (curlyBraces == 0)
+				{
+					return index;
+				}
+			}
+			return -1;
+		}
 
 		private Regreso conversionLexemaRegreso(string lexema)
 		{
@@ -996,10 +1181,127 @@ namespace Compi
 			}
 			return TipoValorNodo.Nada;
 		}
+		public TipoValorNodo ImpresionCodigoP(Arboles miArbol)
+		{
 
-		private TipoValorNodo FuncionEquivalencia(
-	TipoValorNodo tipoValorHijoIzquierdo,
-	TipoValorNodo tipoValorHijoDerecho, Operaciones soyOperacion)
+			if (miArbol.soySentenciaTipo == TipoSentencia.Asignacion)
+			{
+				codigoP.Add(miArbol.codigoP);
+				Console.WriteLine(miArbol.codigoP);
+			}
+
+
+			if (miArbol.HijoIzquierdo != null)
+				miArbol.tipoValorHijoIzquierdo =
+					 ImpresionCodigoP(miArbol.HijoIzquierdo);
+
+			if (miArbol.soySentenciaTipo == TipoSentencia.If)
+			{
+				codigoP.Add(miArbol.codigoP);
+				Console.WriteLine(miArbol.codigoP);
+			}
+
+			if (miArbol.HijoCentro != null)
+				miArbol.tipoValorHijoDerecho =
+					 ImpresionCodigoP(miArbol.HijoCentro);
+			if (miArbol.HijoDerecho != null && miArbol.soySentenciaTipo == TipoSentencia.If)
+			{
+				codigoP.Add(miArbol.codigoP3);
+				Console.WriteLine(miArbol.codigoP3);
+				codigoP.Add(miArbol.codigoP2);
+				Console.WriteLine(miArbol.codigoP2);
+			}
+			else if (miArbol.HijoDerecho == null && miArbol.soySentenciaTipo == TipoSentencia.If)
+			{
+				codigoP.Add(miArbol.codigoP2);
+				Console.WriteLine(miArbol.codigoP2);
+			}
+
+			if (miArbol.HijoDerecho != null)
+				miArbol.tipoValorHijoDerecho =
+					ImpresionCodigoP(miArbol.HijoDerecho);
+
+			if (miArbol.Hermano != null)
+			{
+				if (miArbol.soySentenciaTipo == TipoSentencia.Escribir) codigoP.Add(miArbol.codigoP);
+				else if (miArbol.soySentenciaTipo == TipoSentencia.Asignacion) codigoP.Add(miArbol.codigoP2);
+				else if (miArbol.soySentenciaTipo == TipoSentencia.Leer) codigoP.Add(miArbol.codigoP);
+				else if (miArbol.soySentenciaTipo == TipoSentencia.Escribir) codigoP.Add(miArbol.codigoP);
+				miArbol.tipoValorHermano = ImpresionCodigoP(miArbol.Hermano);
+
+			}
+			else
+			{
+				if (miArbol.soySentenciaTipo == TipoSentencia.Asignacion)
+				{
+					codigoP.Add(miArbol.codigoP2);
+					Console.WriteLine(miArbol.codigoP2);
+				}
+
+				else if (miArbol.soySentenciaTipo == TipoSentencia.If)
+				{
+					codigoP.Add(miArbol.codigoP4);
+					Console.WriteLine(miArbol.codigoP4);
+				}
+
+				else if (miArbol.soySentenciaTipo == TipoSentencia.Leer)
+				{
+					codigoP.Add(miArbol.codigoP);
+					codigoP.Add(miArbol.codigoP2);
+					codigoP.Add(miArbol.codigoP3);
+				}
+
+				else
+				{
+					codigoP.Add(miArbol.codigoP);
+					Console.WriteLine(miArbol.codigoP);
+				}
+			}
+
+
+
+			return TipoValorNodo.Nada;
+		}
+		public TipoValorNodo GetType(string lexema)
+		{
+			bool claseExistente = ts.ExisteClaseHeredada(claseActiva);
+			if (claseExistente)
+			{
+				return ConversionTipoDatoTipoValorNodo(ts.TipoNodoVariable(ts.ObtenerNodoClase(claseActiva), metodoActivo, lexema));
+			}
+			else
+			{
+				HuboErrores = true;
+				retorno = "Clase " + claseActiva + " no definida";
+				ErroresSintacticos.Add(new Error(retorno, claseActivaRenglon, "-500", "Semantico"));
+				return ConversionTipoDatoTipoValorNodo(ts.TipoNodoVariable(ts.ObtenerNodoClase(claseActiva), metodoActivo, lexema));
+				//return false
+			}
+				
+		}
+
+		public TipoValorNodo ConversionTipoDatoTipoValorNodo(TipoDato tipo)
+		{
+			switch (tipo)
+			{
+				case TipoDato.Int:
+					return TipoValorNodo.Entero;
+				case TipoDato.Float:
+					return TipoValorNodo.Flotante;
+				case TipoDato.Boolean:
+					return TipoValorNodo.Booleano;
+				case TipoDato.String:
+					return TipoValorNodo.Cadena;
+				case TipoDato.Char:
+					return TipoValorNodo.Caracter;
+				case TipoDato.NADA:
+					return TipoValorNodo.Nada;
+				default:
+					return TipoValorNodo.Nada;
+			}
+		}
+
+		private TipoValorNodo FuncionEquivalencia(TipoValorNodo tipoValorHijoIzquierdo, TipoValorNodo tipoValorHijoDerecho, Operaciones soyOperacion)
 		{
 			switch (soyOperacion)
 			{

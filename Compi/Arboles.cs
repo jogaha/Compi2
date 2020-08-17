@@ -300,7 +300,7 @@ namespace Compi
             var sentenciaWrite = NuevoNodoSentencia(TipoSentencia.Escribir);
 
             int iTemp = puntero;
-            while (miListaTokenTemporal[iTemp].lexema != ")")
+            while (miListaTokenTemporal[iTemp].lexema != "endl")
             {
                 iTemp++;
             }
@@ -330,7 +330,7 @@ namespace Compi
                 sentenciaIf.codigoP3 = "ujp L" + ts.numeroEtiqueta;
 
                 sentenciaIf.codigoP4 = "lab L" + ts.numeroEtiqueta;
-                if (copiaLista[copiaLista.Count - 1].estado == 108 || copiaLista[copiaLista.Count - 1].estado == 109)
+                if (copiaLista[copiaLista.Count - 1].estado == -38 || copiaLista[copiaLista.Count - 1].estado == -35)
                 {
                     return sentenciaIf;
                 }
@@ -437,7 +437,7 @@ namespace Compi
             }
             else
             {
-                if (puntero != 0 && new[] { 202, 204, 207, 213, 219, 226, 228, 236, 242 }.Contains(miListaTokenTemporal[puntero - 1].estado))
+                if (puntero != 0 && new[] { -103, -107, -120, -126, -160}.Contains(miListaTokenTemporal[puntero - 1].estado))
                 {
                     //insertar variable en tabla de simbolos
                     NodoVariables miVariable = new NodoVariables();
@@ -458,7 +458,7 @@ namespace Compi
                 sentenciaAsignacion.codigoP2 = "sto";
 
                 puntero += 2;
-                if (miListaTokenTemporal[puntero].lexema == "read")
+                if (miListaTokenTemporal[puntero].lexema == "cin")
                 {
                     sentenciaAsignacion.HijoIzquierdo = sentenciaAsignacion.SentenciaRead(sentenciaAsignacion.lexema);
                 }
@@ -505,7 +505,7 @@ namespace Compi
                 sentenciaAsignacion.HijoIzquierdo = op;
                 return sentenciaAsignacion;
             }
-            else if (new[] { 202, 204, 207, 213, 219, 226, 228, 236, 242 }.Contains(miListaTokenTemporal[puntero].estado))
+            else if (new[] { -103,-107,-120,-126,-160 }.Contains(miListaTokenTemporal[puntero].estado))
             {
                 Arboles variable = new Arboles();
                 variable.soyExpresionTipo = TipoExpresion.Nada;
@@ -615,7 +615,7 @@ namespace Compi
             t.claseActiva = this.claseActiva;
             t.metodoActivo = this.metodoActivo;
 
-            if (miListaTokenTemporal[puntero].estado == 101)
+            if (miListaTokenTemporal[puntero].estado == -1)
             {
                 
                 t = NuevoNodoExpresion(TipoExpresion.Constante);
@@ -624,7 +624,7 @@ namespace Compi
                 t.lexema = miListaTokenTemporal[puntero].lexema;
                 puntero++;
             }
-            if (miListaTokenTemporal[puntero].estado == 102)
+            if (miListaTokenTemporal[puntero].estado == -2)
             {
                 t = NuevoNodoExpresion(TipoExpresion.Constante);
                 t.codigoP = "ldc " + miListaTokenTemporal[puntero].lexema;
@@ -632,16 +632,16 @@ namespace Compi
                 t.soyValorTipo = TipoValorNodo.Flotante;
                 puntero++;
             }
-            if (miListaTokenTemporal[puntero].estado == 140)
+            if (miListaTokenTemporal[puntero].estado == -5)
             {
                 t = NuevoNodoExpresion(TipoExpresion.Constante);
-                puntero++;
+                
                 t.lexema = miListaTokenTemporal[puntero].lexema;
                 t.codigoP = "ldc " + miListaTokenTemporal[puntero].lexema;
                 t.soyValorTipo = TipoValorNodo.Cadena;
                 puntero += 2;
             }
-            else if (miListaTokenTemporal[puntero].estado == 100)
+            else if (miListaTokenTemporal[puntero].estado == -4)
             {
                 t = NuevoNodoExpresion(TipoExpresion.Identificador);
                 t.lexema = miListaTokenTemporal[puntero].lexema;
@@ -657,7 +657,7 @@ namespace Compi
                 }
                 else
                 {
-                    t.valorNodo = ts.ObtenerNodoVariable(t.lexema, metodoActivo, ts.ObtenerNodoClase(claseActiva)).valor;
+                    t.valorNodo = ts.ObtenerNodoVariable(t.lexema, metodoActivo, ts.ObtenerNodoClase(claseActiva)).Valor;
                 }
                 puntero++;
             }
